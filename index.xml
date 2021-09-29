@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>idocker</title>
-    <link>https://lushenle.github.io/</link>
-    <description>Recent content on idocker</description>
+    <title>Shenle Lu&#39;s Blog</title>
+    <link>https://idocker.io/</link>
+    <description>Recent content on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Sep 2021 22:18:30 +0800</lastBuildDate><atom:link href="https://lushenle.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Sep 2021 22:18:30 +0800</lastBuildDate><atom:link href="https://idocker.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Aws Lambda Hands On</title>
-      <link>https://lushenle.github.io/post/aws-lambda-hands-on/</link>
+      <title>AWS Lambda Hands On</title>
+      <link>https://idocker.io/2021/09/aws-lambda-hands-on/</link>
       <pubDate>Tue, 28 Sep 2021 22:18:30 +0800</pubDate>
       
-      <guid>https://lushenle.github.io/post/aws-lambda-hands-on/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>My First Post</title>
-      <link>https://lushenle.github.io/post/my-first-post/</link>
-      <pubDate>Tue, 28 Sep 2021 22:11:37 +0800</pubDate>
-      
-      <guid>https://lushenle.github.io/post/my-first-post/</guid>
+      <guid>https://idocker.io/2021/09/aws-lambda-hands-on/</guid>
       <description></description>
     </item>
     
