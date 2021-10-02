@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>2021s on Shenle Lu&#39;s Blog</title>
-    <link>https://idocker.io/2021/</link>
-    <description>Recent content in 2021s on Shenle Lu&#39;s Blog</description>
+    <title>Container on Shenle Lu&#39;s Blog</title>
+    <link>https://idocker.io/categories/container/</link>
+    <description>Recent content in Container on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 Oct 2021 23:09:04 +0800</lastBuildDate><atom:link href="https://idocker.io/2021/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Oct 2021 23:09:04 +0800</lastBuildDate><atom:link href="https://idocker.io/categories/container/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Using Github Actions Build Docker Image Push to AWS ECR</title>
       <link>https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</link>
       <pubDate>Sat, 02 Oct 2021 23:09:04 +0800</pubDate>
       
       <guid>https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS Lambda Hands On</title>
-      <link>https://idocker.io/2021/09/aws-lambda-hands-on/</link>
-      <pubDate>Tue, 28 Sep 2021 22:18:30 +0800</pubDate>
-      
-      <guid>https://idocker.io/2021/09/aws-lambda-hands-on/</guid>
       <description></description>
     </item>
     
