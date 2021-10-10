@@ -3,28 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://idocker.io/2021/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/tags/aws/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/categories/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/categories/container/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/tags/ecr/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/tags/github/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
+  </url><url>
+    <loc>https://idocker.io/tags/lambda/</loc>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
+  </url><url>
+    <loc>https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</loc>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
+  </url><url>
+    <loc>https://idocker.io/categories/serverless/</loc>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/tags/</loc>
-    <lastmod>2021-10-02T23:09:04+08:00</lastmod>
+    <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</loc>
     <lastmod>2021-10-02T23:09:04+08:00</lastmod>
@@ -33,12 +42,6 @@
     <lastmod>2021-09-28T22:18:30+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/tags/golang/</loc>
-    <lastmod>2021-09-28T22:18:30+08:00</lastmod>
-  </url><url>
-    <loc>https://idocker.io/tags/lambda/</loc>
-    <lastmod>2021-09-28T22:18:30+08:00</lastmod>
-  </url><url>
-    <loc>https://idocker.io/categories/serverless/</loc>
     <lastmod>2021-09-28T22:18:30+08:00</lastmod>
   </url><url>
     <loc>https://idocker.io/archives/</loc>

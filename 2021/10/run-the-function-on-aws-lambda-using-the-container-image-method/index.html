@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/idocker.io\/",
+  "author": {
+    "@type": "Person",
+    "name": "Shenle Lu",
+    
+    "image": "https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236"
+    
+  },
+  "name":"Shenle Lu\u0027s Blog",
+  "description":"\u003cp\u003eWe will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.\u003c\/p\u003e",
+  "url":"https:\/\/idocker.io\/2021\/10\/run-the-function-on-aws-lambda-using-the-container-image-method\/",
+  "keywords":"[Container, Lambda, Serverless]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.88.1 with theme Tranquilpeak 0.5.2-BETA">
+<meta name="author" content="Shenle Lu">
+<meta name="keywords" content="Container, Lambda, Serverless">
+<meta name="description" content="We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.">
+
+
+<meta property="og:description" content="We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Run the Function on AWS Lambda Using the Container Image Method">
+<meta name="twitter:title" content="Run the Function on AWS Lambda Using the Container Image Method">
+<meta property="og:url" content="https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/">
+<meta property="twitter:url" content="https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/">
+<meta property="og:site_name" content="Shenle Lu&#39;s Blog">
+<meta property="og:description" content="We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.">
+<meta name="twitter:description" content="We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-10-10T12:49:05">
+  
+  
+    <meta property="article:modified_time" content="2021-10-10T12:49:05">
+  
+  
+  
+    
+      <meta property="article:section" content="Container">
+    
+      <meta property="article:section" content="Serverless">
+    
+  
+  
+    
+      <meta property="article:tag" content="AWS">
+    
+      <meta property="article:tag" content="ECR">
+    
+      <meta property="article:tag" content="GitHub">
+    
+      <meta property="article:tag" content="Lambda">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+  <meta name="twitter:site" content="@lushenle">
+
+
+  <meta name="twitter:creator" content="@lushenle">
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+
+
+
+
+
+
+    <title>Run the Function on AWS Lambda Using the Container Image Method</title>
+
+    <link rel="icon" href="https://idocker.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://idocker.io/css/style-c5yjx2losbmkttdif4mskx5f9pqjjquywurgngxfvceyyrtyatseix5hpd.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PHMF5JPJF6"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-PHMF5JPJF6', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://idocker.io/" aria-label="Go to homepage">Shenle Lu&#39;s Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://idocker.io/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://idocker.io/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Shenle Lu</h4>
+        
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, ASU Master&rsquo;s in Progress.</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/lushenle" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/lushenle" target="_blank" rel="noopener" title="Twitter">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-twitter" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/lushenle/" target="_blank" rel="noopener" title="Instagram">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-instagram" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/shenle-lu-b52255222/" target="_blank" rel="noopener" title="LinkedIn">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-linkedin" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/17026153/shenle-lu" target="_blank" rel="noopener" title="Stack Overflow">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-stack-overflow" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://idocker.io/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Run the Function on AWS Lambda Using the Container Image Method
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2021-10-10T12:49:05&#43;08:00">
+        
+  October 10, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://idocker.io/categories/container">Container</a>, 
+    
+      <a class="category-link" href="https://idocker.io/categories/serverless">Serverless</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p>We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.</p>
+
+<h1 id="table-of-contents">Table of Contents</h1>
+<nav id="TableOfContents">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#infrastructure-setup">Infrastructure Setup</a></li>
+<li><a href="#lambda-function">Lambda Function</a></li>
+<li><a href="#build-container-image">Build Container Image</a>
+<ul>
+<li><a href="#create-dockerfile">Create Dockerfile</a></li>
+<li><a href="#build-container-image-1">Build Container Image</a></li>
+</ul></li>
+<li><a href="#deploy">Deploy</a>
+<ul>
+<li><a href="#create-the-function">Create the function</a></li>
+<li><a href="#add-s3-tirgger">Add S3 tirgger</a></li>
+</ul></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#monitoring">Monitoring</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</nav>
+
+
+<h1 id="overview">Overview</h1>
+
+<p>Autoscaling Application for Face-Recognition using Python on AWS Lambda.</p>
+
+<p><img src="https://i.imgur.com/QSNETUA.png" alt="Project Architecture" /></p>
+
+<p>Refer to the cloud architecture diagram for insight into how to implement this workload:</p>
+
+<ul>
+<li>Users upload videos to your input bucket stored in S3.</li>
+<li>When a new video becomes available in the input bucket, it triggers the Lambda function to process the video.</li>
+<li>Finally, the Lambda function stores the student’s academic information as a file in the output bucket in S3.</li>
+</ul>
+
+<h1 id="requirements">Requirements</h1>
+
+<p>Before you starting, you should have the following conditions:</p>
+
+<ul>
+<li>General knowledge of Python</li>
+<li>General knowledge of AWS</li>
+<li>General knowledge of Container</li>
+<li>IAM roles configured</li>
+<li>AWS credentials created</li>
+<li>Infrastructure set up to specification of architecture diagram</li>
+</ul>
+
+<h1 id="infrastructure-setup">Infrastructure Setup</h1>
+
+<p>As you can see from the architecture diagram, we need to use S3 and Dynamodb.</p>
+
+<p>The following operations are performed using command line tools, If the AWS CLI is not yet installed, you can install it using the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pip3 install awscli --upgrade --user</code></pre></div>
+<ul>
+<li>Ref: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">What is the AWS Command Line Interface?</a></li>
+</ul>
+
+<p><strong>Create S3 Bucket</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># input bucket</span>
+aws s3 mb s3://cse546-project3-input-group1 --region ap-northeast-2
+<span style="color:#75715e"># output bucket</span>
+aws s3 mb s3://cse546-project3-output-group1 --region ap-northeast-2</code></pre></div>
+<p><strong>Create Dynamodb Table</strong></p>
+
+<p>The table named <code>StudentData</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws dynamodb create-table <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --table-name StudentData <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --attribute-definitions AttributeName<span style="color:#f92672">=</span>name,AttributeType<span style="color:#f92672">=</span>S <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --key-schema AttributeName<span style="color:#f92672">=</span>name,KeyType<span style="color:#f92672">=</span>HASH <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --provisioned-throughput ReadCapacityUnits<span style="color:#f92672">=</span>1,WriteCapacityUnits<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span></code></pre></div>
+<p><strong>Put Item to Table</strong></p>
+
+<p>The data schema <code>student_data.json</code> file in <a href="https://github.com/lushenle/cse546-project3/blob/main/student_data.json">GitHub repo</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws dynamodb batch-write-item --request-items file://student_data.json</code></pre></div>
+<p><strong>Create Repository</strong></p>
+
+<p>The repository named <code>cse546-group1-project3</code>, After that, the container image will be pushed to this repo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ecr create-repository <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --repository-name cse546-group1-project3</code></pre></div>
+<h1 id="lambda-function">Lambda Function</h1>
+
+<p>Before we actually start writing the lambda handle, let&rsquo;s create some of the methods we need to use, e.g. to download the video and upload the results to S3’s method:</p>
+
+<ul>
+<li><p>Function to read the &lsquo;encoding&rsquo; file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">open_encoding</span>(filename):
+file <span style="color:#f92672">=</span> open(filename, <span style="color:#e6db74">&#39;rb&#39;</span>)
+data <span style="color:#f92672">=</span> pickle<span style="color:#f92672">.</span>load(file)
+file<span style="color:#f92672">.</span>close()
+<span style="color:#66d9ef">return</span> data</code></pre></div></li>
+
+<li><p>Function to download object from input bucket</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">download_object</span>(bucket_name, item, dest):
+<span style="color:#66d9ef">try</span>:
+    s3<span style="color:#f92672">.</span>download_file(bucket_name, item, dest)
+    print(<span style="color:#e6db74">&#39;Ok&#39;</span>)
+<span style="color:#66d9ef">except</span> ClientError <span style="color:#66d9ef">as</span> e:
+    <span style="color:#66d9ef">if</span> e<span style="color:#f92672">.</span>response[<span style="color:#e6db74">&#39;Error&#39;</span>][<span style="color:#e6db74">&#39;Code&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;404&#39;</span>:
+        print(<span style="color:#e6db74">&#39;The video does not exist: s3://</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(bucket_name, item))
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">raise</span>
+<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span></code></pre></div></li>
+
+<li><p>Function to upload result to S3 output bucket</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_object</span>(objects, bucket_name, item):
+<span style="color:#66d9ef">try</span>:
+    s3<span style="color:#f92672">.</span>upload_file(objects, bucket_name, item)
+    print(<span style="color:#e6db74">&#39;Upload Successful&#39;</span>)
+<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">FileNotFoundError</span>:
+    print(<span style="color:#e6db74">&#39;The file was not found&#39;</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+<span style="color:#66d9ef">except</span> ClientError:
+    print(<span style="color:#e6db74">&#39;ClientError...&#39;</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span></code></pre></div></li>
+</ul>
+
+<p>Python&rsquo;s built-in <code>os</code> module can execute system commands for us, and we&rsquo;ll use it to execute the ffmpeg command:</p>
+<pre tabindex="0"><code class="language-pythn" data-lang="pythn">path = &#34;/tmp/&#34;
+
+os.system(&#39;ffmpeg -i &#39; + str(video_file_path) + &#39; -r 1 &#39; + str(path) + &#39;image-%3d.jpeg&#39; + &#39; -loglevel 8&#39;)</code></pre>
+<p>Listening bucket event, and download user upload video:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">bucket <span style="color:#f92672">=</span> event[<span style="color:#e6db74">&#39;Records&#39;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;s3&#39;</span>][<span style="color:#e6db74">&#39;bucket&#39;</span>][<span style="color:#e6db74">&#39;name&#39;</span>]
+
+
+key <span style="color:#f92672">=</span> urllib<span style="color:#f92672">.</span>parse<span style="color:#f92672">.</span>unquote_plus(
+    event[<span style="color:#e6db74">&#39;Records&#39;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;s3&#39;</span>][<span style="color:#e6db74">&#39;object&#39;</span>][<span style="color:#e6db74">&#39;key&#39;</span>],
+    encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>)
+
+path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/tmp/&#39;</span>
+video_file_path <span style="color:#f92672">=</span> str(path) <span style="color:#f92672">+</span> key
+
+download_object(bucket, key, video_file_path)</code></pre></div>
+<p>Recognize faces from Python:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">face_image <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>load_image_file(
+    str(path) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;image-001.jpeg&#39;</span>)
+face_encoding <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>face_encodings(face_image)[<span style="color:#ae81ff">0</span>]</code></pre></div>
+<p>For each known face, determine whether the current face matches it,and the matching name is stored in the result:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> encoding <span style="color:#f92672">in</span> enumerate(total_face_encoding[<span style="color:#e6db74">&#39;encoding&#39;</span>]):
+    match <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>compare_faces(
+        [encoding[<span style="color:#ae81ff">1</span>]], face_encoding)
+    <span style="color:#66d9ef">if</span> match[<span style="color:#ae81ff">0</span>]:
+        result <span style="color:#f92672">=</span> total_face_encoding[<span style="color:#e6db74">&#39;name&#39;</span>][encoding[<span style="color:#ae81ff">0</span>]]
+        <span style="color:#66d9ef">break</span></code></pre></div>
+<p>Query for matching records in dynamodb:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">response <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span>get_item(
+    Key<span style="color:#f92672">=</span>{
+        <span style="color:#e6db74">&#39;name&#39;</span>: result
+    }
+)
+item <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;Item&#39;</span>]</code></pre></div>
+<p>Creating csv object, and write the content to a CSV file and upload to output bucket:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">csv_name <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
+
+<span style="color:#66d9ef">with</span> open(path <span style="color:#f92672">+</span> csv_name, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> f:
+    writer <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>writer(f)
+    writer<span style="color:#f92672">.</span>writerow([item[<span style="color:#e6db74">&#39;name&#39;</span>], item[<span style="color:#e6db74">&#39;major&#39;</span>], item[<span style="color:#e6db74">&#39;year&#39;</span>]])
+
+upload_object(path <span style="color:#f92672">+</span> csv_name, output_bucket, csv_name)</code></pre></div>
+<p>Here&rsquo;s the complete Handler Function: <a href="https://github.com/lushenle/cse546-project3/blob/main/handler.py">handler.py</a></p>
+
+<h1 id="build-container-image">Build Container Image</h1>
+
+<p>Our function will be deployed using the container image, so we also need to package the functions into the container image.</p>
+
+<blockquote>
+<p>Note in particular that all directories other than <code>/tmp</code> are read-only during the function run.</p>
+</blockquote>
+
+<h2 id="create-dockerfile">Create Dockerfile</h2>
+
+<p>Before performing face recognition, we need to extract each frame from the video uploaded by the user. Here, <a href="https://www.ffmpeg.org/">ffmpeg</a> is a very impressive tool for those who know, we use the ffmpeg tool to extract frames from the video.</p>
+
+<p>We are using a Debian Linux based base image and can install ffmpeg on the container image using the apt command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> python-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt install -y ffmpeg <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    <span style="color:#f92672">&amp;&amp;</span> apt clean<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
+<p>Add the <code>encoding</code> file which stores the names of the known faces to container image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> encoding <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
+<p>In this project, instead of using the base container image provided by AWS, we used a custom one, so we also had to create the entrypoint script <code>entry.sh
+</code> and package it inside the image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/sh
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>AWS_LAMBDA_RUNTIME_API<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+    exec /usr/bin/aws-lambda-rie /usr/local/bin/python -m awslambdaric $1
+<span style="color:#66d9ef">else</span>
+    exec /usr/local/bin/python -m awslambdaric $1
+<span style="color:#66d9ef">fi</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> entry.sh /<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> chmod <span style="color:#ae81ff">777</span> /entry.sh<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
+<p>Install the dependent packages for Python runtime:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> requirements.txt <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> python<span style="color:#e6db74">${</span>RUNTIME_VERSION<span style="color:#e6db74">}</span> -m pip install -r requirements.txt --target <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
+<p>The most important thing, of course, is to package the function into the container image, so let me finish it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">COPY</span> handler.py <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span></code></pre></div>
+<p>Finally, set the CMD to our handler (could also be done as a parameter override outside of the Dockerfile):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENTRYPOINT</span> [ <span style="color:#e6db74">&#34;/entry.sh&#34;</span> ]<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [ <span style="color:#e6db74">&#34;handler.face_recognition_handler&#34;</span> ]</code></pre></div>
+<p>The finished <a href="https://github.com/lushenle/cse546-project3/blob/main/Dockerfile">Dockerfile</a> can be viewed in my <a href="https://github.com/lushenle/cse546-project3">GitHub repo</a>.</p>
+
+<h2 id="build-container-image-1">Build Container Image</h2>
+
+<p>For simplicity, convenience, and network independence, we use GitHub Actions (Github Action is a service offered by Github that has similar functionality as other CI tools like Jenkins, Travis, or CircleCI.) to build the container image.</p>
+
+<p><strong>Workflow</strong></p>
+
+<p>In order to use Github Actions, we must define a workflow. Workflow is basically an automated procedure that’s made up of one or more jobs. It can be triggered by 3 different ways:</p>
+
+<ul>
+<li>By an event that happens on the Github repository.</li>
+<li>By setting a repetitive schedule.</li>
+<li>Or manually clicking on the run workflow button on the repository UI.</li>
+</ul>
+
+<p>To create a workflow, we just need to add a <code>.yml</code> file to the <code>.github/workflows</code> folder in our repository. For example, this is a simple workflow file <code>build.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
+<span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and Push Image to Repositories</span>
+
+<span style="color:#f92672">on</span>:
+  <span style="color:#f92672">push</span>:
+    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
+  <span style="color:#f92672">schedule</span>:
+  	- <span style="color:#f92672">cron</span>:  <span style="color:#e6db74">&#39;*/15 * * * *&#39;</span>
+
+<span style="color:#f92672">jobs</span>:
+
+  <span style="color:#f92672">build</span>:
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span></code></pre></div>
+<p>The name of this workflow is <code>Build and Push Image to Repositories</code>. We can define how it will be triggered using the <code>on</code> keyword.</p>
+
+<p>In this flow, there&rsquo;s an event that will trigger the workflow whenever a change is pushed to the master branch, and another scheduled trigger that will run the workflow every 15 minute.</p>
+
+<p>Then we define the list of jobs to run in the <code>jobs</code> section of the workflow yaml file.</p>
+
+<p><strong>Runner</strong></p>
+
+<p>In order to run the jobs, we must specify a runner for each of them. A runner is simply a server that listens for available jobs, and it will run only 1 job at a time.</p>
+
+<p>We can use Github hosted runner directly, or specify our own self-hosted runner.</p>
+
+<p>The runners will run the jobs, then report the their progress, logs, and results back to Github, so we can easily check it on the UI of the repository.</p>
+
+<p>We use the run-on keyword to specify the runner we want to use:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">jobs</span>:
+
+  <span style="color:#f92672">build</span>:
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span></code></pre></div>
+<p>In this workflow, we’re using Github’s hosted runner for Ubuntu’s latest version.</p>
+
+<p><strong>Job</strong></p>
+
+<p>A job is a set of steps that will be executed on the same runner.</p>
+
+<p>Normally all jobs in the workflow run in parallel, except when you have some jobs that depend on each other, then they will be run serially.</p>
+
+<p>The jobs are listed inside the workflow under the <code>jobs</code> keyword:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">jobs</span>:
+
+  <span style="color:#f92672">build</span>:
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+
+    <span style="color:#f92672">steps</span>:
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Check out code</span>
+        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Get hash</span>
+        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo &#34;::set-output name=sha_short::$(git rev-parse --short HEAD)&#34;</span>
+        <span style="color:#f92672">id</span>: <span style="color:#ae81ff">sha</span>
+
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up QEMU</span>
+        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-qemu-action@v1</span>
+
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up Docker Buildx</span>
+        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-buildx-action@v1</span></code></pre></div>
+<p>After the container image is built, we will push the image to both AWS ECR and docker hub,  before you can push you need to login container repository:</p>
+
+<p>Add credentials in Github secrets, you can do this by going to settings of your repository and then <code>secrets</code> tab, where you add them:</p>
+
+<p><img src="https://i.imgur.com/PoS8GmX.png" alt="Add_Secrets" /></p>
+
+<ul>
+<li><code>DOCKER_USERNAME</code>: Docker hub username</li>
+<li><code>DOCKER_PASSWORD</code>: Docker hub login password</li>
+<li><code>AWS_ACCESS_KEY_ID</code>: AWS access key ID</li>
+
+<li><p><code>AWS_SECRET_ACCESS_KEY</code>: AWS secret access key</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Login to DockerHub</span>
+    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/login-action@v1</span>
+    <span style="color:#f92672">with</span>:
+      <span style="color:#f92672">username</span>: <span style="color:#ae81ff">${{ secrets.DOCKER_USERNAME }}</span>
+      <span style="color:#f92672">password</span>: <span style="color:#ae81ff">${{ secrets.DOCKER_PASSWORD }}</span>
+
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Configure AWS credentials</span>
+    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">aws-actions/configure-aws-credentials@v1</span>
+    <span style="color:#f92672">with</span>:
+      <span style="color:#f92672">aws-access-key-id</span>: <span style="color:#ae81ff">${{ secrets.AWS_ACCESS_KEY_ID }}</span>
+      <span style="color:#f92672">aws-secret-access-key</span>: <span style="color:#ae81ff">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span>
+      <span style="color:#f92672">aws-region</span>: <span style="color:#ae81ff">ap-northeast-2</span>
+
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Login to Amazon ECR</span>
+    <span style="color:#f92672">id</span>: <span style="color:#ae81ff">login-ecr</span>
+    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">aws-actions/amazon-ecr-login@v1</span></code></pre></div></li>
+</ul>
+
+<p>Build and Push image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build, tag, and push image</span>
+        <span style="color:#f92672">env</span>:
+          <span style="color:#f92672">ECR_REGISTRY</span>: <span style="color:#ae81ff">${{ steps.login-ecr.outputs.registry }}</span>
+          <span style="color:#f92672">ECR_REPOSITORY</span>: <span style="color:#ae81ff">cse546-group1-project3</span>
+          <span style="color:#f92672">IMAGE_TAG</span>: <span style="color:#ae81ff">${{ steps.sha.outputs.sha_short }}</span>
+        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+</span><span style="color:#e6db74">          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+</span><span style="color:#e6db74">          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ishenle/asu-cse546-aws:project3-$IMAGE_TAG
+</span><span style="color:#e6db74">          docker push ishenle/asu-cse546-aws:project3-$IMAGE_TAG</span>          </code></pre></div>
+<p>Here&rsquo;s the complete workflow file <a href="https://github.com/lushenle/cse546-project3/blob/main/.github/workflows/build.yml">build.yml</a></p>
+
+<h1 id="deploy">Deploy</h1>
+
+<p>The Lambda console provides a code editor for non-compiled languages that lets you modify and test code quickly.</p>
+
+<h2 id="create-the-function">Create the function</h2>
+
+<p><strong>To create a Lambda function with the console</strong></p>
+
+<ul>
+<li><p>Open the <a href="https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2">Functions page</a> on the Lambda console.</p></li>
+
+<li><p>Choose Create function.</p></li>
+
+<li><p>Select Container image.</p></li>
+
+<li><p>Enter the name of the Function name in the text input field.</p></li>
+
+<li><p>Click Browse images, select container image</p></li>
+
+<li><p>Click Create function</p></li>
+</ul>
+
+<p>Refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/getting-started-create-function.html">Create a Lambda function with the console</a></p>
+
+<h2 id="add-s3-tirgger">Add S3 tirgger</h2>
+
+<p>Open our created function configure, choose Add trigger, as shown below:</p>
+
+<p><img src="https://imgur.com/TBfk3Co.png" alt="add_trigger" /></p>
+
+<h1 id="testing">Testing</h1>
+
+<p>There are various ways to test the lambda function,can refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html">python-exceptions</a> in this case using the Lambda console.</p>
+
+<p><strong>To invoke function on the Lambda console:</strong></p>
+
+<ul>
+<li>Open the <a href="https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2#/functions">Functions page</a> on the Lambda console.</li>
+<li>Choose the function to test, and choose Test.</li>
+<li>Under Test event, select New event.</li>
+<li>Enter the name of the bucket in the text input field.</li>
+<li>For Name, enter a name for the test. In the text entry box, enter the JSON test event.</li>
+<li>Choose Save changes.</li>
+<li>Choose Test.</li>
+</ul>
+
+<p>The test data:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;Records&#34;</span>: [
+    {
+      <span style="color:#f92672">&#34;eventVersion&#34;</span>: <span style="color:#e6db74">&#34;2.0&#34;</span>,
+      <span style="color:#f92672">&#34;eventSource&#34;</span>: <span style="color:#e6db74">&#34;aws:s3&#34;</span>,
+      <span style="color:#f92672">&#34;awsRegion&#34;</span>: <span style="color:#e6db74">&#34;ap-northeast-2&#34;</span>,
+      <span style="color:#f92672">&#34;eventTime&#34;</span>: <span style="color:#e6db74">&#34;1970-01-01T00:00:00.000Z&#34;</span>,
+      <span style="color:#f92672">&#34;eventName&#34;</span>: <span style="color:#e6db74">&#34;ObjectCreated:Put&#34;</span>,
+      <span style="color:#f92672">&#34;userIdentity&#34;</span>: {
+        <span style="color:#f92672">&#34;principalId&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE&#34;</span>
+      },
+      <span style="color:#f92672">&#34;requestParameters&#34;</span>: {
+        <span style="color:#f92672">&#34;sourceIPAddress&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>
+      },
+      <span style="color:#f92672">&#34;responseElements&#34;</span>: {
+        <span style="color:#f92672">&#34;x-amz-request-id&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE123456789&#34;</span>,
+        <span style="color:#f92672">&#34;x-amz-id-2&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE123/5678abcdefghijklambdaisawesome/mnopqrstuvwxyzABCDEFGH&#34;</span>
+      },
+      <span style="color:#f92672">&#34;s3&#34;</span>: {
+        <span style="color:#f92672">&#34;s3SchemaVersion&#34;</span>: <span style="color:#e6db74">&#34;1.0&#34;</span>,
+        <span style="color:#f92672">&#34;configurationId&#34;</span>: <span style="color:#e6db74">&#34;testConfigRule&#34;</span>,
+        <span style="color:#f92672">&#34;bucket&#34;</span>: {
+          <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;cse546-project3-input-group1&#34;</span>,
+          <span style="color:#f92672">&#34;ownerIdentity&#34;</span>: {
+            <span style="color:#f92672">&#34;principalId&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE&#34;</span>
+          },
+          <span style="color:#f92672">&#34;arn&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::cse546-project3-input-group1&#34;</span>
+        },
+        <span style="color:#f92672">&#34;object&#34;</span>: {
+          <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;test_0.mp4&#34;</span>,
+          <span style="color:#f92672">&#34;size&#34;</span>: <span style="color:#ae81ff">322560</span>,
+          <span style="color:#f92672">&#34;eTag&#34;</span>: <span style="color:#e6db74">&#34;0123456789abcdef0123456789abcdef&#34;</span>,
+          <span style="color:#f92672">&#34;sequencer&#34;</span>: <span style="color:#e6db74">&#34;0A1B2C3D4E5F678901&#34;</span>
+        }
+      }
+    }
+  ]
+}</code></pre></div>
+<h1 id="monitoring">Monitoring</h1>
+
+<p>You can refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-tracing.html">Instrumenting Python code in AWS Lambda</a>, or view CloudWatch dashboard.</p>
+
+<p>Monitoring methods provided by AWS: <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-monitoring.html">Monitoring and troubleshooting Lambda applications</a></p>
+
+<h1 id="summary">Summary</h1>
+
+<p>Our cloud app implement a smart classroom assistant for educators. This assistant takes videos from  the user’s classroom, performs face recognition on the collected videos, looks up the recognized students in the database, and returns the relevant academic information of each student back to the user.</p>
+
+<h1 id="reference">Reference</h1>
+
+<ul>
+<li><a href="https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html">Lambda function handler in Python</a></li>
+<li><a href="https://pypi.org/project/face-recognition/">Face Recognition: Recognize faces from Python or from the command line</a></li>
+<li><a href="https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html">Using an Amazon S3 trigger to invoke a Lambda function</a></li>
+</ul>
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://idocker.io/tags/aws/">AWS</a>
+
+  <a class="tag tag--primary tag--small" href="https://idocker.io/tags/ecr/">ECR</a>
+
+  <a class="tag tag--primary tag--small" href="https://idocker.io/tags/github/">GitHub</a>
+
+  <a class="tag tag--primary tag--small" href="https://idocker.io/tags/lambda/">Lambda</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/" data-tooltip="Using Github Actions Build Docker Image Push to AWS ECR" aria-label="PREVIOUS: Using Github Actions Build Docker Image Push to AWS ECR">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/idocker.io\/2021\/10\/run-the-function-on-aws-lambda-using-the-container-image-method\/';
+        
+          this.page.identifier = '\/2021\/10\/run-the-function-on-aws-lambda-using-the-container-image-method\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'blog-idocker-io';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 Shenle Lu. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/" data-tooltip="Using Github Actions Build Docker Image Push to AWS ECR" aria-label="PREVIOUS: Using Github Actions Build Docker Image Push to AWS ECR">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fidocker.io%2F2021%2F10%2Frun-the-function-on-aws-lambda-using-the-container-image-method%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fidocker.io%2F2021%2F10%2Frun-the-function-on-aws-lambda-using-the-container-image-method%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fidocker.io%2F2021%2F10%2Frun-the-function-on-aws-lambda-using-the-container-image-method%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Shenle Lu</h4>
+    
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, ASU Master&rsquo;s in Progress.</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Senior DevOps Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Beijing, China
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://idocker.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://idocker.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+</html>
+
