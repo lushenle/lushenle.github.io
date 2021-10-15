@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on Shenle Lu&#39;s Blog</title>
-    <link>https://idocker.io/tags/golang/</link>
+    <link>https://idocker.io/categories/golang/</link>
     <description>Recent content in Golang on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://idocker.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://idocker.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux Namespace in Go</title>
       <link>https://idocker.io/2021/10/linux-namespace-in-go/</link>
@@ -16,15 +16,6 @@
       <description>&lt;p&gt;As you know, the very popular container technology is based on Linux Namespace and Cgroups implementations. What is Linux namespace then? How is Linux namespace used in containers? In this post, some experiments will be conducted to introduce the use of Linux namespace in containers.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://imgur.com/He4ogr3.png&#34; alt=&#34;namespace&#34; /&gt;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>AWS Lambda Hands On</title>
-      <link>https://idocker.io/2021/09/aws-lambda-hands-on/</link>
-      <pubDate>Tue, 28 Sep 2021 22:18:30 +0800</pubDate>
-      
-      <guid>https://idocker.io/2021/09/aws-lambda-hands-on/</guid>
-      <description></description>
     </item>
     
   </channel>
