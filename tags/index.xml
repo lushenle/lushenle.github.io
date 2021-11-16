@@ -2,71 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Shenle Lu&#39;s Blog</title>
-    <link>https://ooooooooooooooooooooooooooo.ooo/tags/</link>
+    <link>https://idocker.io/tags/</link>
     <description>Recent content in Tags on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://ooooooooooooooooooooooooooo.ooo/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://idocker.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/golang/</link>
+      <link>https://idocker.io/tags/golang/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/golang/</guid>
+      <guid>https://idocker.io/tags/golang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linux</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/linux/</link>
+      <link>https://idocker.io/tags/linux/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/linux/</guid>
+      <guid>https://idocker.io/tags/linux/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Namespace</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/namespace/</link>
+      <link>https://idocker.io/tags/namespace/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/namespace/</guid>
+      <guid>https://idocker.io/tags/namespace/</guid>
       <description></description>
     </item>
     
     <item>
       <title>AWS</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/aws/</link>
+      <link>https://idocker.io/tags/aws/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/aws/</guid>
+      <guid>https://idocker.io/tags/aws/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ECR</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/ecr/</link>
+      <link>https://idocker.io/tags/ecr/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/ecr/</guid>
+      <guid>https://idocker.io/tags/ecr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>GitHub</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/github/</link>
+      <link>https://idocker.io/tags/github/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/github/</guid>
+      <guid>https://idocker.io/tags/github/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Lambda</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/tags/lambda/</link>
+      <link>https://idocker.io/tags/lambda/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/tags/lambda/</guid>
+      <guid>https://idocker.io/tags/lambda/</guid>
       <description></description>
     </item>
     

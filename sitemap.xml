@@ -2,63 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/2021/</loc>
+    <loc>https://idocker.io/2021/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/categories/</loc>
+    <loc>https://idocker.io/categories/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/golang/</loc>
+    <loc>https://idocker.io/tags/golang/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/categories/golang/</loc>
+    <loc>https://idocker.io/categories/golang/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/linux/</loc>
+    <loc>https://idocker.io/tags/linux/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/categories/linux/</loc>
+    <loc>https://idocker.io/categories/linux/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/2021/10/linux-namespace-in-go/</loc>
+    <loc>https://idocker.io/2021/10/linux-namespace-in-go/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/namespace/</loc>
+    <loc>https://idocker.io/tags/namespace/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/</loc>
+    <loc>https://idocker.io/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/</loc>
+    <loc>https://idocker.io/tags/</loc>
     <lastmod>2021-10-12T17:51:14+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/aws/</loc>
+    <loc>https://idocker.io/tags/aws/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/categories/container/</loc>
+    <loc>https://idocker.io/categories/container/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/ecr/</loc>
+    <loc>https://idocker.io/tags/ecr/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/github/</loc>
+    <loc>https://idocker.io/tags/github/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/tags/lambda/</loc>
+    <loc>https://idocker.io/tags/lambda/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</loc>
+    <loc>https://idocker.io/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/categories/serverless/</loc>
+    <loc>https://idocker.io/categories/serverless/</loc>
     <lastmod>2021-10-10T12:49:05+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</loc>
+    <loc>https://idocker.io/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</loc>
     <lastmod>2021-10-02T23:09:04+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/2021/09/aws-lambda-hands-on/</loc>
+    <loc>https://idocker.io/2021/09/aws-lambda-hands-on/</loc>
     <lastmod>2021-09-28T22:18:30+08:00</lastmod>
   </url><url>
-    <loc>https://ooooooooooooooooooooooooooo.ooo/archives/</loc>
+    <loc>https://idocker.io/archives/</loc>
   </url>
 </urlset>

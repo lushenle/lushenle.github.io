@@ -2,44 +2,44 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Shenle Lu&#39;s Blog</title>
-    <link>https://ooooooooooooooooooooooooooo.ooo/categories/</link>
+    <link>https://idocker.io/categories/</link>
     <description>Recent content in Categories on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://ooooooooooooooooooooooooooo.ooo/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://idocker.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/categories/golang/</link>
+      <link>https://idocker.io/categories/golang/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/categories/golang/</guid>
+      <guid>https://idocker.io/categories/golang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linux</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/categories/linux/</link>
+      <link>https://idocker.io/categories/linux/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/categories/linux/</guid>
+      <guid>https://idocker.io/categories/linux/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Container</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/categories/container/</link>
+      <link>https://idocker.io/categories/container/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/categories/container/</guid>
+      <guid>https://idocker.io/categories/container/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Serverless</title>
-      <link>https://ooooooooooooooooooooooooooo.ooo/categories/serverless/</link>
+      <link>https://idocker.io/categories/serverless/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://ooooooooooooooooooooooooooo.ooo/categories/serverless/</guid>
+      <guid>https://idocker.io/categories/serverless/</guid>
       <description></description>
     </item>
     
