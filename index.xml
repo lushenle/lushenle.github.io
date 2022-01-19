@@ -6,13 +6,24 @@
     <description>Recent content on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://shenle.lu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Jan 2022 16:57:15 +0800</lastBuildDate><atom:link href="https://shenle.lu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Deploying MinIO on Kubernetes</title>
+      <link>https://shenle.lu/post/2022/01/deploying-minio-on-kubernetes/</link>
+      <pubDate>Wed, 19 Jan 2022 16:57:15 +0800</pubDate>
+      
+      <guid>https://shenle.lu/post/2022/01/deploying-minio-on-kubernetes/</guid>
+      <description>&lt;p&gt;MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.&lt;/p&gt;
+
+&lt;p&gt;MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Linux Namespace in Go</title>
-      <link>https://shenle.lu/2021/10/linux-namespace-in-go/</link>
+      <link>https://shenle.lu/post/2021/10/linux-namespace-in-go/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://shenle.lu/2021/10/linux-namespace-in-go/</guid>
+      <guid>https://shenle.lu/post/2021/10/linux-namespace-in-go/</guid>
       <description>&lt;p&gt;As you know, the very popular container technology is based on Linux Namespace and Cgroups implementations. What is Linux namespace then? How is Linux namespace used in containers? In this post, some experiments will be conducted to introduce the use of Linux namespace in containers.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://imgur.com/He4ogr3.png&#34; alt=&#34;namespace&#34; /&gt;&lt;/p&gt;</description>
@@ -20,28 +31,28 @@
     
     <item>
       <title>Run the Function on AWS Lambda Using the Container Image Method</title>
-      <link>https://shenle.lu/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</link>
+      <link>https://shenle.lu/post/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</link>
       <pubDate>Sun, 10 Oct 2021 12:49:05 +0800</pubDate>
       
-      <guid>https://shenle.lu/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</guid>
+      <guid>https://shenle.lu/post/2021/10/run-the-function-on-aws-lambda-using-the-container-image-method/</guid>
       <description>&lt;p&gt;We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Using Github Actions Build Docker Image Push to AWS ECR</title>
-      <link>https://shenle.lu/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</link>
+      <link>https://shenle.lu/post/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</link>
       <pubDate>Sat, 02 Oct 2021 23:09:04 +0800</pubDate>
       
-      <guid>https://shenle.lu/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</guid>
+      <guid>https://shenle.lu/post/2021/10/using-github-actions-build-docker-image-push-to-aws-ecr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>AWS Lambda Hands On</title>
-      <link>https://shenle.lu/2021/09/aws-lambda-hands-on/</link>
+      <link>https://shenle.lu/post/2021/09/aws-lambda-hands-on/</link>
       <pubDate>Tue, 28 Sep 2021 22:18:30 +0800</pubDate>
       
-      <guid>https://shenle.lu/2021/09/aws-lambda-hands-on/</guid>
+      <guid>https://shenle.lu/post/2021/09/aws-lambda-hands-on/</guid>
       <description></description>
     </item>
     

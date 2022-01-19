@@ -6,7 +6,25 @@
     <description>Recent content in Tags on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Jan 2022 16:57:15 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Container</title>
+      <link>https://shenle.lu/tags/container/</link>
+      <pubDate>Wed, 19 Jan 2022 16:57:15 +0800</pubDate>
+      
+      <guid>https://shenle.lu/tags/container/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://shenle.lu/tags/kubernetes/</link>
+      <pubDate>Wed, 19 Jan 2022 16:57:15 +0800</pubDate>
+      
+      <guid>https://shenle.lu/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Golang</title>
       <link>https://shenle.lu/tags/golang/</link>

@@ -9,10 +9,10 @@
     <lastBuildDate>Tue, 12 Oct 2021 17:51:14 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux Namespace in Go</title>
-      <link>https://shenle.lu/2021/10/linux-namespace-in-go/</link>
+      <link>https://shenle.lu/post/2021/10/linux-namespace-in-go/</link>
       <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
       
-      <guid>https://shenle.lu/2021/10/linux-namespace-in-go/</guid>
+      <guid>https://shenle.lu/post/2021/10/linux-namespace-in-go/</guid>
       <description>&lt;p&gt;As you know, the very popular container technology is based on Linux Namespace and Cgroups implementations. What is Linux namespace then? How is Linux namespace used in containers? In this post, some experiments will be conducted to introduce the use of Linux namespace in containers.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://imgur.com/He4ogr3.png&#34; alt=&#34;namespace&#34; /&gt;&lt;/p&gt;</description>
