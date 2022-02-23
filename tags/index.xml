@@ -6,7 +6,34 @@
     <description>Recent content in Tags on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 19 Jan 2022 16:57:15 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Feb 2022 12:47:17 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Algorithm</title>
+      <link>https://shenle.lu/tags/algorithm/</link>
+      <pubDate>Tue, 22 Feb 2022 12:47:17 +0800</pubDate>
+      
+      <guid>https://shenle.lu/tags/algorithm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>https://shenle.lu/tags/golang/</link>
+      <pubDate>Tue, 22 Feb 2022 12:47:17 +0800</pubDate>
+      
+      <guid>https://shenle.lu/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tag2</title>
+      <link>https://shenle.lu/tags/tag2/</link>
+      <pubDate>Tue, 22 Feb 2022 12:47:17 +0800</pubDate>
+      
+      <guid>https://shenle.lu/tags/tag2/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Container</title>
       <link>https://shenle.lu/tags/container/</link>
@@ -22,15 +49,6 @@
       <pubDate>Wed, 19 Jan 2022 16:57:15 +0800</pubDate>
       
       <guid>https://shenle.lu/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Golang</title>
-      <link>https://shenle.lu/tags/golang/</link>
-      <pubDate>Tue, 12 Oct 2021 17:51:14 +0800</pubDate>
-      
-      <guid>https://shenle.lu/tags/golang/</guid>
       <description></description>
     </item>
     
