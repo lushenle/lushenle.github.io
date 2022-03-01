@@ -6,7 +6,16 @@
     <description>Recent content in Golang on Shenle Lu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Feb 2022 19:34:57 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Mar 2022 13:10:14 +0800</lastBuildDate><atom:link href="https://shenle.lu/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some Exercises and Golang Solutions</title>
+      <link>https://shenle.lu/post/2022/02/some-exercises-and-golang-solutions/</link>
+      <pubDate>Tue, 01 Mar 2022 13:10:14 +0800</pubDate>
+      
+      <guid>https://shenle.lu/post/2022/02/some-exercises-and-golang-solutions/</guid>
+      <description>&lt;p&gt;This is my recent study notes, some of common problems in the interview, and gives the solution ideas and methods, as well as Go code implementation.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Recursive Algorithm and Applications</title>
       <link>https://shenle.lu/post/2022/02/recursive-algorithm-and-applications/</link>
