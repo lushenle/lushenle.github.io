@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/shenle.lu\/",
+  "author": {
+    "@type": "Person",
+    "name": "Shenle Lu",
+    
+    "image": "https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236"
+    
+  },
+  "name":"Shenle Lu\u0027s Blog",
+  "description":"\u003cp\u003eGolang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.\u003c\/p\u003e",
+  "url":"https:\/\/shenle.lu\/post\/2022\/04\/sorts-in-golang-generic\/",
+  "keywords":"[Golang, Data-Structure, Algorithm]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Shenle Lu">
+<meta name="keywords" content="Golang, Data-Structure, Algorithm">
+<meta name="description" content="Golang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.">
+
+
+<meta property="og:description" content="Golang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sorts in Golang Generic">
+<meta name="twitter:title" content="Sorts in Golang Generic">
+<meta property="og:url" content="https://shenle.lu/post/2022/04/sorts-in-golang-generic/">
+<meta property="twitter:url" content="https://shenle.lu/post/2022/04/sorts-in-golang-generic/">
+<meta property="og:site_name" content="Shenle Lu&#39;s Blog">
+<meta property="og:description" content="Golang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.">
+<meta name="twitter:description" content="Golang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-04-11T19:17:57">
+  
+  
+    <meta property="article:modified_time" content="2022-04-11T19:17:57">
+  
+  
+  
+    
+      <meta property="article:section" content="Golang">
+    
+      <meta property="article:section" content="Programming">
+    
+  
+  
+    
+      <meta property="article:tag" content="Golang">
+    
+      <meta property="article:tag" content="Algorithm">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+  <meta name="twitter:site" content="@lushenle">
+
+
+  <meta name="twitter:creator" content="@lushenle">
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+
+
+
+
+
+  <meta property="og:image" content="https://i.imgur.com/wazprFs.jpg">
+  <meta property="twitter:image" content="https://i.imgur.com/wazprFs.jpg">
+
+
+    <title>Sorts in Golang Generic</title>
+
+    <link rel="icon" href="https://shenle.lu/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://shenle.lu/post/2022/04/sorts-in-golang-generic/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.css" integrity="sha512-MLcK/YRapzET1qTBXrOiZE6bGBgtATMo2bIyalVJ8EKDEGNoeA3SPQkvWAR0zNS650YG13ocXBMeioDuZcSRuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://shenle.lu/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7PSKWF3B39"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-7PSKWF3B39', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://shenle.lu/" aria-label="Go to homepage">Shenle Lu&#39;s Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://shenle.lu/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://shenle.lu/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Shenle Lu</h4>
+        
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/lushenle" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/lushenle" target="_blank" rel="noopener" title="Twitter">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-twitter" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/lushenle/" target="_blank" rel="noopener" title="Instagram">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-instagram" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/shenle-lu-b52255222/" target="_blank" rel="noopener" title="LinkedIn">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-linkedin" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/17026153/shenle-lu" target="_blank" rel="noopener" title="Stack Overflow">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-stack-overflow" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Sorts in Golang Generic
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-04-11T19:17:57&#43;08:00">
+        
+  April 11, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://shenle.lu/categories/golang">Golang</a>, 
+    
+      <a class="category-link" href="https://shenle.lu/categories/programming">Programming</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p>Golang generic, make our programming work easier, we only need to write less code, to achieve multi-functional functions.</p>
+
+<h1 id="table-of-contents">Table of Contents</h1>
+<nav id="TableOfContents">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#implementation">Implementation</a>
+<ul>
+<li><a href="#define-the-constraints">Define the Constraints</a></li>
+<li><a href="#sorting-algorithms">Sorting Algorithms</a></li>
+<li><a href="#testing">Testing</a>
+<ul>
+<li><a href="#generic-bubblesort">Generic BubbleSort</a></li>
+<li><a href="#generic-insertionsort">Generic InsertionSort</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</nav>
+
+
+<h1 id="introduction">Introduction</h1>
+
+<p>We will use golang generics to write several common sorting algorithms such as bubble sort, insertion sort, etc. Then test if the sorting algorithm works properly.</p>
+
+<h1 id="implementation">Implementation</h1>
+
+<h2 id="define-the-constraints">Define the Constraints</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">constraints</span>
+
+<span style="color:#75715e">// Signed is a generic type constraint for all signed integers
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Signed</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">int</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">int8</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">int16</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">int32</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">int64</span>
+}
+
+<span style="color:#75715e">// Unsigned is a generic type constraint for all unsigned integers
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unsigned</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">uint</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">uint8</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">uint16</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">uint32</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">uint64</span>
+}
+
+<span style="color:#75715e">// Integer is a generic type constraint for all integers(signed and unsigned)
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Integer</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#a6e22e">Signed</span> | <span style="color:#a6e22e">Unsigned</span>
+}
+
+<span style="color:#75715e">// Float is a generic type constraint for all floating point types
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Float</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">float32</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">float64</span>
+}
+
+<span style="color:#75715e">// Number is a generic type constraint for all numeric type in Go except Complex types
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Number</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#a6e22e">Integer</span> | <span style="color:#a6e22e">Float</span>
+}
+
+<span style="color:#75715e">// Ordered is a generic type constraint for all ordered data types in Go
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Ordered</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#a6e22e">Integer</span> | <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#66d9ef">string</span> | <span style="color:#a6e22e">Float</span>
+}</code></pre></div>
+<h2 id="sorting-algorithms">Sorting Algorithms</h2>
+
+<ul>
+<li><p>Bubble Sort</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">BubbleSort</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Ordered</span>](<span style="color:#a6e22e">arr</span> []<span style="color:#a6e22e">T</span>) []<span style="color:#a6e22e">T</span> {
+	<span style="color:#a6e22e">swapped</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">true</span>
+
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">swapped</span> {
+		<span style="color:#a6e22e">swapped</span> = <span style="color:#66d9ef">false</span>
+		<span style="color:#75715e">// `length -i - 1` is for ignoring comparisons of elements which have
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// already been compared in earlier iterations
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">arr</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] &lt; <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>] {
+				<span style="color:#75715e">// here swapping of positions is being done
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>], <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
+				<span style="color:#a6e22e">swapped</span> = <span style="color:#66d9ef">true</span>
+			}
+		}
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">arr</span>
+}</code></pre></div></li>
+
+<li><p>Insertion Sort</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InsertionSort</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Ordered</span>](<span style="color:#a6e22e">arr</span> []<span style="color:#a6e22e">T</span>) []<span style="color:#a6e22e">T</span> {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">currentIndex</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">currentIndex</span> &lt; len(<span style="color:#a6e22e">arr</span>); <span style="color:#a6e22e">currentIndex</span><span style="color:#f92672">++</span> {
+		<span style="color:#75715e">// storing current element whose left side is checked for
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// its correct position
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">temp</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">currentIndex</span>]
+		<span style="color:#a6e22e">iterator</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">currentIndex</span>
+
+		<span style="color:#75715e">// check whether the adjacent element in left side is greater or
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// less than the current element
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> ; <span style="color:#a6e22e">iterator</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">iterator</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">temp</span>; <span style="color:#a6e22e">iterator</span><span style="color:#f92672">--</span> {
+
+			<span style="color:#75715e">// moving the left side element to one position forward
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">iterator</span>] = <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">iterator</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+		}
+
+		<span style="color:#75715e">// moving current element to its  correct position
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">iterator</span>] = <span style="color:#a6e22e">temp</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">arr</span>
+}</code></pre></div></li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="generic-bubblesort">Generic BubbleSort</h3>
+
+<p><strong>Integer</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">ints</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">8</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">9</span>}
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">sorts</span>.<span style="color:#a6e22e">BubbleSort</span>(<span style="color:#a6e22e">ints</span>))
+}
+
+<span style="color:#75715e">// Output:
+</span><span style="color:#75715e">//  [-4 -2 -1 1 2 4 6 8 9]
+</span></code></pre></div>
+<p><strong>Floating</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">floats</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">float64</span>{<span style="color:#ae81ff">2.1</span>, <span style="color:#ae81ff">3.2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8.3</span>}
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">sorts</span>.<span style="color:#a6e22e">BubbleSort</span>(<span style="color:#a6e22e">floats</span>))
+	<span style="color:#a6e22e">Output</span>:
+}
+
+<span style="color:#75715e">// Output:
+</span><span style="color:#75715e">//  [-3 2.1 3.2 7 8.3 9]
+</span></code></pre></div>
+<p><strong>Strings</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">strs</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;obama&#34;</span>, <span style="color:#e6db74">&#34;trump&#34;</span>, <span style="color:#e6db74">&#34;biden&#34;</span>}
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">sorts</span>.<span style="color:#a6e22e">BubbleSort</span>(<span style="color:#a6e22e">strs</span>))
+}
+
+<span style="color:#75715e">// Output:
+</span><span style="color:#75715e">//  [biden obama trump]
+</span></code></pre></div>
+<h3 id="generic-insertionsort">Generic InsertionSort</h3>
+
+<p>As we expected, it is consistent with the results of <code>BubbleSort</code>.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>By using generics, some repetitive code is reduced and our work is made easier. Thanks for reading, the full code is in my GitHub repository <a href="https://github.com/lushenle/awesome-golang-algorithm/tree/main/sorts">awesome-golang-algorithm</a>.</p>
+
+<h1 id="reference">Reference</h1>
+
+<ul>
+<li><a href="https://golangexample.com/tag/generics/">Golang Example</a></li>
+<li><a href="https://go.dev/doc/tutorial/generics">Tutorial: Getting started with generics</a></li>
+</ul>
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://shenle.lu/tags/golang/">Golang</a>
+
+  <a class="tag tag--primary tag--small" href="https://shenle.lu/tags/algorithm/">Algorithm</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2022/02/some-exercises-and-golang-solutions/" data-tooltip="Some Exercises and Golang Solutions" aria-label="PREVIOUS: Some Exercises and Golang Solutions">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#gitalk" aria-label="Leave a comment">
+        <i class="fa fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="gitalk">
+      <noscript>Please enable JavaScript to view the comments powered by Gitalk.</noscript>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js" integrity="sha512-EcTCcXV46teiNwe0VcnM5A038tcY+BaQYO4nW6Gh2i7v4/HjBVg7xx3+JBLl9WofDds//INJAiEGAtdgr8PWyA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+      (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('gitalk').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+          return;
+        }
+        new Gitalk({
+          clientID: 'ac713dbb5a422f9107dd',
+          clientSecret: 'f4225291e2d478e9f9fdb2af6d5245f95eefdb5f',
+          repo: 'lushenle.github.io',
+          owner: 'lushenle',
+          admin: ['lushenle'],
+          id: '3894f47966116fdbf938844ab13a7828',
+          ...{"distractionfreemode":false,"enablehotkey":true,"language":"en","pagerdirection":"first","perpage":10}
+        }).render('gitalk')
+      })()
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 Shenle Lu. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2022/02/some-exercises-and-golang-solutions/" data-tooltip="Some Exercises and Golang Solutions" aria-label="PREVIOUS: Some Exercises and Golang Solutions">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://shenle.lu/post/2022/04/sorts-in-golang-generic/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#gitalk" aria-label="Leave a comment">
+        <i class="fa fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fshenle.lu%2Fpost%2F2022%2F04%2Fsorts-in-golang-generic%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fshenle.lu%2Fpost%2F2022%2F04%2Fsorts-in-golang-generic%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fshenle.lu%2Fpost%2F2022%2F04%2Fsorts-in-golang-generic%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Shenle Lu</h4>
+    
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Senior DevOps Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Beijing, China
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://shenle.lu/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://shenle.lu/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+
