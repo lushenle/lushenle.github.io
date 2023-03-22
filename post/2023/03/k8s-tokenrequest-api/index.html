@@ -1144,6 +1144,241 @@ func main() {
 </figure>
 
 <p>This will display the status of the TokenReview request, including whether the token is valid or not.</p>
+<h2 id="complete-code">Complete code</h2>
+
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>main</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br><span>25</span><br><span>26</span><br><span>27</span><br><span>28</span><br><span>29</span><br><span>30</span><br><span>31</span><br><span>32</span><br><span>33</span><br><span>34</span><br><span>35</span><br><span>36</span><br><span>37</span><br><span>38</span><br><span>39</span><br><span>40</span><br><span>41</span><br><span>42</span><br><span>43</span><br><span>44</span><br><span>45</span><br><span>46</span><br><span>47</span><br><span>48</span><br><span>49</span><br><span>50</span><br><span>51</span><br><span>52</span><br><span>53</span><br><span>54</span><br><span>55</span><br><span>56</span><br><span>57</span><br><span>58</span><br><span>59</span><br><span>60</span><br><span>61</span><br><span>62</span><br><span>63</span><br><span>64</span><br><span>65</span><br><span>66</span><br><span>67</span><br><span>68</span><br><span>69</span><br><span>70</span><br><span>71</span><br><span>72</span><br><span>73</span><br><span>74</span><br><span>75</span><br><span>76</span><br><span>77</span><br><span>78</span><br><span>79</span><br><span>80</span><br><span>81</span><br><span>82</span><br><span>83</span><br><span>84</span><br><span>85</span><br><span>86</span><br><span>87</span><br><span>88</span><br><span>89</span><br><span>90</span><br><span>91</span><br><span>92</span><br><span>93</span><br><span>94</span><br><span>95</span><br><span>96</span><br><span>97</span><br><span>98</span><br><span>99</span><br><span>100</span><br><span>101</span><br><span>102</span><br><span>103</span><br><span>104</span><br><span>105</span><br><span>106</span><br><span>107</span><br><span>108</span><br><span>109</span><br><span>110</span><br><span>111</span><br><span>112</span><br><span>113</span><br><span>114</span><br><span>115</span><br><span>116</span><br><span>117</span><br><span>118</span><br><span>119</span><br><span>120</span><br><span>121</span><br><span>122</span><br><span>123</span><br><span>124</span><br><span>125</span><br><span>126</span><br><span>127</span><br><span>128</span><br><span>129</span><br><span>130</span><br><span>131</span><br><span>132</span><br><span>133</span><br><span>134</span><br><span>135</span><br><span>136</span><br><span>137</span><br><span>138</span><br><span>139</span><br><span>140</span><br><span>141</span><br><span>142</span><br><span>143</span><br><span>144</span><br><span>145</span><br><span>146</span><br><span>147</span><br><span>148</span><br><span>149</span><br><span>150</span><br><span>151</span><br><span>152</span><br><span>153</span><br><span>154</span><br><span>155</span><br><span>156</span><br><span>157</span><br><span>158</span><br><span>159</span><br><span>160</span><br><span>161</span><br><span>162</span><br><span>163</span><br><span>164</span><br><span>165</span><br><span>166</span><br><span>167</span><br><span>168</span><br><span>169</span><br><span>170</span><br><span>171</span><br><span>172</span><br><span>173</span><br><span>174</span><br><span>175</span><br><span>176</span><br><span>177</span><br><span>178</span><br><span>179</span><br><span>180</span><br><span>181</span><br><span>182</span><br><span>183</span><br><span>184</span><br><span>185</span><br><span>186</span><br><span>187</span><br><span>188</span><br><span>189</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">package main
+
+import (
+	&#34;context&#34;
+	&#34;encoding/json&#34;
+	&#34;flag&#34;
+	&#34;fmt&#34;
+
+	authenticationv1 &#34;k8s.io/api/authentication/v1&#34;
+	corev1 &#34;k8s.io/api/core/v1&#34;
+	rbacv1 &#34;k8s.io/api/rbac/v1&#34;
+	&#34;k8s.io/apimachinery/pkg/api/errors&#34;
+	metav1 &#34;k8s.io/apimachinery/pkg/apis/meta/v1&#34;
+	&#34;k8s.io/client-go/kubernetes&#34;
+	&#34;k8s.io/client-go/tools/clientcmd&#34;
+	&#34;k8s.io/klog/v2&#34;
+)
+
+var ctx = context.Background()
+
+var (
+	namespace          string
+	serviceAccountName string
+	roleName           string
+	roleBindingName    string
+)
+
+func init() {
+	flag.StringVar(&amp;namespace, &#34;n&#34;, &#34;default&#34;, &#34;target namespace&#34;)
+	flag.StringVar(&amp;serviceAccountName, &#34;sa&#34;, &#34;my-sa&#34;, &#34;service account name&#34;)
+	flag.StringVar(&amp;roleName, &#34;role&#34;, &#34;my-role&#34;, &#34;role name&#34;)
+	flag.StringVar(&amp;roleBindingName, &#34;rb&#34;, &#34;my-rb&#34;, &#34;role binding name&#34;)
+	flag.Parse()
+}
+
+func main() {
+	// Load kubeconfig from home file
+	config, err := clientcmd.BuildConfigFromFlags(&#34;&#34;, clientcmd.RecommendedHomeFile)
+	if err != nil {
+		klog.Errorf(&#34;Error getting config: %v&#34;, err)
+	}
+	// Create a clientset
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		klog.Errorf(&#34;Error creating clientset: %v&#34;, err)
+	}
+
+	// Creat ServiceAccount
+	_, err = updateOrCreateServiceAccount(clientset, ctx, namespace, serviceAccountName)
+	if err != nil {
+		klog.Errorf(&#34;Error create ServiceAccount: %v&#34;, err)
+		return
+	}
+
+	// Create Role
+	_, err = updateOrCreateRole(clientset, ctx, namespace, roleName)
+	if err != nil {
+		klog.Errorf(&#34;Error create Role: %v&#34;, err)
+		return
+	}
+
+	// Create RoleBinding
+	_, err = updateOrCreateRoleBinding(clientset, ctx, namespace, roleName, roleBindingName, serviceAccountName)
+	if err != nil {
+		klog.Errorf(&#34;Error create RoleBinding: %v&#34;, err)
+		return
+	}
+
+	// Create Token
+	token, err := createToken(clientset, ctx, namespace, serviceAccountName)
+	if err != nil {
+		klog.Errorf(&#34;Error create Token: %v&#34;, err)
+		return
+	}
+
+	//fmt.Printf(&#34;Name: %s\nToken: %s\n&#34;, token.Name, token.Status.Token)
+	bytes, _ := json.Marshal(token)
+	fmt.Println(string(bytes))
+}
+
+func createToken(clientset *kubernetes.Clientset, ctx context.Context, namespace, serviceAccountName string) (*authenticationv1.TokenRequest, error) {
+	// Create a TokenRequest
+	tokenRequest := &amp;authenticationv1.TokenRequest{
+		Spec: authenticationv1.TokenRequestSpec{
+			Audiences: []string{&#34;https://kubernetes.default.svc.cluster.local&#34;}, // service-account-issuer
+			ExpirationSeconds: func() *int64 {
+				var seconds int64 = 3600 // Token expiration time in seconds (1 hour)
+				return &amp;seconds
+			}(),
+		},
+	}
+
+	// Request the token
+	return clientset.CoreV1().ServiceAccounts(namespace).CreateToken(ctx,
+		serviceAccountName, tokenRequest, metav1.CreateOptions{})
+}
+
+func updateOrCreateRoleBinding(clientset *kubernetes.Clientset, ctx context.Context, namespace, roleName, roleBindingName, serviceAccountName string) (*rbacv1.RoleBinding, error) {
+	get, err := clientset.RbacV1().RoleBindings(namespace).Get(ctx, roleBindingName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	roleBinding := &amp;rbacv1.RoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      roleBindingName,
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      rbacv1.ServiceAccountKind,
+				Name:      serviceAccountName,
+				Namespace: namespace,
+			},
+		},
+		RoleRef: rbacv1.RoleRef{
+			APIGroup: rbacv1.GroupName,
+			Kind:     &#34;Role&#34;,
+			Name:     roleName,
+		},
+	}
+
+	if get != nil {
+		get = roleBinding
+		return clientset.RbacV1().RoleBindings(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	return clientset.RbacV1().RoleBindings(namespace).Create(ctx, roleBinding, metav1.CreateOptions{})
+}
+
+func updateOrCreateRole(clientset *kubernetes.Clientset, ctx context.Context, namespace, roleName string) (*rbacv1.Role, error) {
+	get, err := clientset.RbacV1().Roles(namespace).Get(ctx, roleName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	rules := []rbacv1.PolicyRule{
+		{
+			APIGroups: []string{&#34;&#34;},
+			Resources: []string{&#34;pods&#34;},
+			Verbs:     []string{&#34;list&#34;, &#34;get&#34;, &#34;watch&#34;},
+		},
+	}
+
+	if get != nil {
+		get.Rules = rules
+		return clientset.RbacV1().Roles(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	role := &amp;rbacv1.Role{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      roleName,
+		},
+		Rules: rules,
+	}
+
+	return clientset.RbacV1().Roles(namespace).Create(ctx, role, metav1.CreateOptions{})
+}
+
+func updateOrCreateServiceAccount(clientset *kubernetes.Clientset, ctx context.Context, namespace, serviceAccountName string) (*corev1.ServiceAccount, error) {
+	get, err := clientset.CoreV1().ServiceAccounts(namespace).Get(ctx, serviceAccountName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	labels := map[string]string{&#34;app&#34;: &#34;myapp&#34;}
+
+	if get != nil {
+		get.ObjectMeta.Labels = labels
+		return clientset.CoreV1().ServiceAccounts(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	sa := &amp;corev1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      serviceAccountName,
+			Labels:    labels,
+		},
+	}
+
+	return clientset.CoreV1().ServiceAccounts(namespace).Create(ctx, sa, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/">https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/</a></li>
