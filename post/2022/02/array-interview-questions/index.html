@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="Golang, Data-Structure, Algorithm">
 <meta name="description" content="In the last article, I briefly introduced the basic data types and syntax of the Go programming language. In this article, we will introduce some common array-related problems in the interview and their solutions.">
@@ -157,7 +157,7 @@ if (!doNotTrack) {
         </a>
         <h4 class="sidebar-profile-name">Shenle Lu</h4>
         
-          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
         
       </div>
     
@@ -328,93 +328,74 @@ if (!doNotTrack) {
           <div class="post-content markdown">
             <div class="main-content-wrap">
               <p>In the last article, I briefly introduced the basic data types and syntax of the Go programming language. In this article, we will introduce some common array-related problems in the interview and their solutions.</p>
-
 <h1 id="table-of-contents">Table of Contents</h1>
 <nav id="TableOfContents">
-<ul>
-<li><a href="#array-interview-questions">Array Interview Questions</a>
-<ul>
-<li><a href="#sum-list">Sum List</a></li>
-<li><a href="#sequential-search">Sequential Search</a></li>
-<li><a href="#binary-search">Binary Search</a></li>
-<li><a href="#rotating-a-list-by-k-positions">Rotating a list by K positions</a></li>
-<li><a href="#find-the-largest-sum-contiguous-subarray">Find the largest sum contiguous subarray</a></li>
-</ul></li>
-<li><a href="#conclusion">Conclusion</a></li>
-<li><a href="#reference">Reference</a></li>
-</ul>
+  <ul>
+    <li><a href="#sum-list">Sum List</a></li>
+    <li><a href="#sequential-search">Sequential Search</a></li>
+    <li><a href="#binary-search">Binary Search</a></li>
+    <li><a href="#rotating-a-list-by-k-positions">Rotating a list by K positions</a></li>
+    <li><a href="#find-the-largest-sum-contiguous-subarray">Find the largest sum contiguous subarray</a></li>
+  </ul>
 </nav>
 
-
 <h1 id="array-interview-questions">Array Interview Questions</h1>
-
 <p>The following section will discuss the various algorithms that are applicable to Lists and will follow by list of practice problems with similar approaches.</p>
-
 <h2 id="sum-list">Sum List</h2>
-
 <p>Write a method that will return the sum of all the elements of the integer list, given list as an input argument.</p>
-
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SumArray</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">sum</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">data</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">sum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">i</span>]
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sum</span>
-}</code></pre></div>
-<h2 id="sequential-search">Sequential Search</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SumArray</span>(data []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	sum <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; len(data); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		sum <span style="color:#ff7b72;font-weight:bold">+=</span> data[i]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> sum
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="sequential-search">Sequential Search</h2>
 <p>Write a method, which will search a list for some given value.</p>
-
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SequentialSearch</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">data</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">value</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">i</span>] {
-			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
-}</code></pre></div>
-<p><strong>Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SequentialSearch</span>(data []<span style="color:#ff7b72">int</span>, value <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">bool</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; len(data); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> value <span style="color:#ff7b72;font-weight:bold">==</span> data[i] {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#79c0ff">true</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#79c0ff">false</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Analysis:</strong></p>
 <ul>
 <li>Since we have no idea about the data stored in the list, or if the data is not sorted then we have to search the list in sequential manner one by one.</li>
 <li>If we find the value, we are looking for we return true.</li>
 <li>Else, we return False in the end, as we did not found the value we are looking for.</li>
 </ul>
-
 <p>In the above example, the data are not sorted. If the data is sorted, a binary search can be used. We examine the middle position at each step. Depending upon the data that we are searching is greater or smaller than the middle value. We will search either the left or the right portion of the array. At each step, we are eliminating half of the search space there by making this algorithm very efficient.</p>
-
 <h2 id="binary-search">Binary Search</h2>
-
 <p>Binary search in a sorted list.</p>
-
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">BinarySearch</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
-	<span style="color:#a6e22e">size</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">data</span>)
-	<span style="color:#a6e22e">mid</span>, <span style="color:#a6e22e">low</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
-	<span style="color:#a6e22e">high</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">size</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">low</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">high</span> {
-		<span style="color:#a6e22e">mid</span> = <span style="color:#a6e22e">low</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">high</span><span style="color:#f92672">-</span><span style="color:#a6e22e">low</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">value</span> {
-			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
-		}
-
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">mid</span>] &lt; <span style="color:#a6e22e">value</span> {
-			<span style="color:#a6e22e">low</span> = <span style="color:#a6e22e">mid</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">high</span> = <span style="color:#a6e22e">mid</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
-		}
-
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
-}</code></pre></div>
-<p><strong>Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">BinarySearch</span>(data []<span style="color:#ff7b72">int</span>, value <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">bool</span> {
+</span></span><span style="display:flex;"><span>	size <span style="color:#ff7b72;font-weight:bold">:=</span> len(data)
+</span></span><span style="display:flex;"><span>	mid, low <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>	high <span style="color:#ff7b72;font-weight:bold">:=</span> size <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> low <span style="color:#ff7b72;font-weight:bold">&lt;=</span> high {
+</span></span><span style="display:flex;"><span>		mid = low <span style="color:#ff7b72;font-weight:bold">+</span> (high<span style="color:#ff7b72;font-weight:bold">-</span>low)<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> data[mid] <span style="color:#ff7b72;font-weight:bold">==</span> value {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#79c0ff">true</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> data[mid] &lt; value {
+</span></span><span style="display:flex;"><span>			low = mid <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			high = mid <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#79c0ff">false</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Analysis:</strong></p>
 <ul>
 <li>Since we have data sorted in increasing / decreasing order, we can apply more efficient binary search. At each step, we reduce our search space by half.</li>
 <li>At each step, we compare the middle value with the value we are searching. If mid-value is equal to the value we are searching for then we return the middle index.</li>
@@ -422,74 +403,59 @@ if (!doNotTrack) {
 <li>If the value is greater than the middle value then we search the right half of the list.</li>
 <li>If we find the value we are looking for then its index is returned or -1 is returned otherwise.</li>
 </ul>
-
 <h2 id="rotating-a-list-by-k-positions">Rotating a list by K positions</h2>
-
 <p>Given a list, you need to rotate its elements K number of times. For example, a list <code>[10,20,30,40,50,60]</code> rotate by 2 positions to <code>[30,40,50,60,10,20]</code></p>
-
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ReverseArray</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">int</span>) {
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">start</span> &lt; <span style="color:#a6e22e">end</span> {
-		<span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">start</span>], <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">start</span>]
-		<span style="color:#a6e22e">start</span><span style="color:#f92672">++</span>
-		<span style="color:#a6e22e">end</span><span style="color:#f92672">--</span>
-	}
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">RotateArray</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) {
-	<span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">data</span>)
-	<span style="color:#a6e22e">ReverseArray</span>(<span style="color:#a6e22e">data</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">k</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-	<span style="color:#a6e22e">ReverseArray</span>(<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-	<span style="color:#a6e22e">ReverseArray</span>(<span style="color:#a6e22e">data</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-}</code></pre></div>
-<p><strong>Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">ReverseArray</span>(data []<span style="color:#ff7b72">int</span>, start, end <span style="color:#ff7b72">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> start &lt; end {
+</span></span><span style="display:flex;"><span>		data[start], data[end] = data[end], data[start]
+</span></span><span style="display:flex;"><span>		start<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		end<span style="color:#ff7b72;font-weight:bold">--</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">RotateArray</span>(data []<span style="color:#ff7b72">int</span>, k <span style="color:#ff7b72">int</span>) {
+</span></span><span style="display:flex;"><span>	n <span style="color:#ff7b72;font-weight:bold">:=</span> len(data)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">ReverseArray</span>(data, <span style="color:#a5d6ff">0</span>, k<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">ReverseArray</span>(data, k, n<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">ReverseArray</span>(data, <span style="color:#a5d6ff">0</span>, n<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Analysis:</strong></p>
 <ul>
 <li>Rotating list is done in two parts trick. In the first part, we first reverse elements of list first half and then second half.</li>
 </ul>
-
 <p><code>1,2,3,4,5,6,7,8,9,10</code> =&gt; <code>5,6,7,8,9,10,1,2,3,4</code></p>
-
 <p><code>1,2,3,4,5,6,7,8,9,10</code> =&gt; <code>4,3,2,1,10,9,8,7,6,5</code> =&gt; <code>5,6,7,8,9,10,1,2,3,4</code></p>
-
 <ul>
 <li>Then we reverse the whole list there by completing the whole rotation.</li>
 </ul>
-
 <h2 id="find-the-largest-sum-contiguous-subarray">Find the largest sum contiguous subarray</h2>
-
 <p>Given a list of positive and negative integers, find a contiguous subarray whose sum (sum of elements) is maximum.</p>
-
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MaxSubArraySum</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">size</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">data</span>)
-	<span style="color:#a6e22e">maxSoFar</span>, <span style="color:#a6e22e">maxEndingHere</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">size</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">maxEndingHere</span> = <span style="color:#a6e22e">maxEndingHere</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">i</span>]
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">maxEndingHere</span> &lt; <span style="color:#ae81ff">0</span> {
-			<span style="color:#a6e22e">maxEndingHere</span> = <span style="color:#ae81ff">0</span>
-		}
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">maxSoFar</span> &lt; <span style="color:#a6e22e">maxEndingHere</span> {
-			<span style="color:#a6e22e">maxSoFar</span> = <span style="color:#a6e22e">maxEndingHere</span>
-		}
-	}
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">maxSoFar</span>
-}</code></pre></div>
-<p><strong>Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">MaxSubArraySum</span>(data []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	size <span style="color:#ff7b72;font-weight:bold">:=</span> len(data)
+</span></span><span style="display:flex;"><span>	maxSoFar, maxEndingHere <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; size; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		maxEndingHere = maxEndingHere <span style="color:#ff7b72;font-weight:bold">+</span> data[i]
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> maxEndingHere &lt; <span style="color:#a5d6ff">0</span> {
+</span></span><span style="display:flex;"><span>			maxEndingHere = <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> maxSoFar &lt; maxEndingHere {
+</span></span><span style="display:flex;"><span>			maxSoFar = maxEndingHere
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> maxSoFar
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Analysis:</strong></p>
 <ul>
 <li>Maximum subarray in a list is found in a single scan. We keep track of global maximum sum so far and the maximum sum, which include the current element.</li>
 <li>When we find global maximum value so far is less than the maximum value containing current value we update the global maximum value.</li>
 <li>Finally, return the global maximum value.</li>
 </ul>
-
 <h1 id="conclusion">Conclusion</h1>
-
 <p>In this article, I give examples of what I consider to be common interview questions related to arrays, and give solutions. The complete code and test cases are in my GitHub repo <a href="https://github.com/lushenle/awesome-golang-algorithm/tree/main/interviews/array">interviews-array</a>. I hope these will help you. ^_^</p>
-
 <h1 id="reference">Reference</h1>
-
 <ul>
 <li><a href="https://www.educative.io/blog/50-golang-interview-questions">Crack the top 50 Golang interview questions</a></li>
 <li><a href="https://www.interviewbit.com/golang-interview-questions/">Golang Interview Questions</a></li>
@@ -617,7 +583,7 @@ if (!doNotTrack) {
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 Shenle Lu. All Rights Reserved
+    &copy; 2023 Shenle Lu. All Rights Reserved
   </span>
 </footer>
 
@@ -733,7 +699,7 @@ if (!doNotTrack) {
     
     <h4 id="about-card-name">Shenle Lu</h4>
     
-      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
     
     
       <div id="about-card-job">

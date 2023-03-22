@@ -14,8 +14,7 @@
       
       <guid>https://shenle.lu/post/2021/10/linux-namespace-in-go/</guid>
       <description>&lt;p&gt;As you know, the very popular container technology is based on Linux Namespace and Cgroups implementations. What is Linux namespace then? How is Linux namespace used in containers? In this post, some experiments will be conducted to introduce the use of Linux namespace in containers.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://imgur.com/He4ogr3.png&#34; alt=&#34;namespace&#34; /&gt;&lt;/p&gt;</description>
+&lt;p&gt;&lt;img src=&#34;https://imgur.com/He4ogr3.png&#34; alt=&#34;namespace&#34;&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

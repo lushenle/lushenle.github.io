@@ -14,7 +14,6 @@
       
       <guid>https://shenle.lu/post/2022/01/deploying-minio-on-kubernetes/</guid>
       <description>&lt;p&gt;MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.&lt;/p&gt;
-
 &lt;p&gt;MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.&lt;/p&gt;</description>
     </item>
     

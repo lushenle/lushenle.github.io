@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="Container, Lambda, Serverless">
 <meta name="description" content="We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.">
@@ -158,7 +158,7 @@ if (!doNotTrack) {
         </a>
         <h4 class="sidebar-profile-name">Shenle Lu</h4>
         
-          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
         
       </div>
     
@@ -329,50 +329,30 @@ if (!doNotTrack) {
           <div class="post-content markdown">
             <div class="main-content-wrap">
               <p>We will build an elastic application that can automatically scale out and in on demand and cost-effectively by using the PaaS cloud. Specifically, we will build this application using AWS Lambda and other supporting services from AWS. AWS Lambda is the first and currently the most widely used function-based serverless computing service.</p>
-
 <h1 id="table-of-contents">Table of Contents</h1>
 <nav id="TableOfContents">
-<ul>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#infrastructure-setup">Infrastructure Setup</a></li>
-<li><a href="#lambda-function">Lambda Function</a></li>
-<li><a href="#build-container-image">Build Container Image</a>
-<ul>
-<li><a href="#create-dockerfile">Create Dockerfile</a></li>
-<li><a href="#build-container-image-1">Build Container Image</a></li>
-</ul></li>
-<li><a href="#deploy">Deploy</a>
-<ul>
-<li><a href="#create-the-function">Create the function</a></li>
-<li><a href="#add-s3-tirgger">Add S3 tirgger</a></li>
-</ul></li>
-<li><a href="#testing">Testing</a></li>
-<li><a href="#monitoring">Monitoring</a></li>
-<li><a href="#summary">Summary</a></li>
-<li><a href="#reference">Reference</a></li>
-</ul>
+  <ul>
+    <li><a href="#create-dockerfile">Create Dockerfile</a></li>
+    <li><a href="#build-container-image-1">Build Container Image</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#create-the-function">Create the function</a></li>
+    <li><a href="#add-s3-tirgger">Add S3 tirgger</a></li>
+  </ul>
 </nav>
 
-
 <h1 id="overview">Overview</h1>
-
 <p>Autoscaling Application for Face-Recognition using Python on AWS Lambda.</p>
-
-<p><img src="https://i.imgur.com/QSNETUA.png" alt="Project Architecture" /></p>
-
+<p><img src="https://i.imgur.com/QSNETUA.png" alt="Project Architecture"></p>
 <p>Refer to the cloud architecture diagram for insight into how to implement this workload:</p>
-
 <ul>
 <li>Users upload videos to your input bucket stored in S3.</li>
 <li>When a new video becomes available in the input bucket, it triggers the Lambda function to process the video.</li>
 <li>Finally, the Lambda function stores the student’s academic information as a file in the output bucket in S3.</li>
 </ul>
-
 <h1 id="requirements">Requirements</h1>
-
 <p>Before you starting, you should have the following conditions:</p>
-
 <ul>
 <li>General knowledge of Python</li>
 <li>General knowledge of AWS</li>
@@ -381,319 +361,277 @@ if (!doNotTrack) {
 <li>AWS credentials created</li>
 <li>Infrastructure set up to specification of architecture diagram</li>
 </ul>
-
 <h1 id="infrastructure-setup">Infrastructure Setup</h1>
-
 <p>As you can see from the architecture diagram, we need to use S3 and Dynamodb.</p>
-
 <p>The following operations are performed using command line tools, If the AWS CLI is not yet installed, you can install it using the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pip3 install awscli --upgrade --user</code></pre></div>
-<ul>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip3 install awscli --upgrade --user
+</span></span></code></pre></div><ul>
 <li>Ref: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">What is the AWS Command Line Interface?</a></li>
 </ul>
-
 <p><strong>Create S3 Bucket</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># input bucket</span>
-aws s3 mb s3://cse546-project3-input-group1 --region ap-northeast-2
-<span style="color:#75715e"># output bucket</span>
-aws s3 mb s3://cse546-project3-output-group1 --region ap-northeast-2</code></pre></div>
-<p><strong>Create Dynamodb Table</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># input bucket</span>
+</span></span><span style="display:flex;"><span>aws s3 mb s3://cse546-project3-input-group1 --region ap-northeast-2
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># output bucket</span>
+</span></span><span style="display:flex;"><span>aws s3 mb s3://cse546-project3-output-group1 --region ap-northeast-2
+</span></span></code></pre></div><p><strong>Create Dynamodb Table</strong></p>
 <p>The table named <code>StudentData</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws dynamodb create-table <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --table-name StudentData <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --attribute-definitions AttributeName<span style="color:#f92672">=</span>name,AttributeType<span style="color:#f92672">=</span>S <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --key-schema AttributeName<span style="color:#f92672">=</span>name,KeyType<span style="color:#f92672">=</span>HASH <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --provisioned-throughput ReadCapacityUnits<span style="color:#f92672">=</span>1,WriteCapacityUnits<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span></code></pre></div>
-<p><strong>Put Item to Table</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws dynamodb create-table <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    --table-name StudentData <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    --attribute-definitions <span style="color:#79c0ff">AttributeName</span><span style="color:#ff7b72;font-weight:bold">=</span>name,AttributeType<span style="color:#ff7b72;font-weight:bold">=</span>S <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    --key-schema <span style="color:#79c0ff">AttributeName</span><span style="color:#ff7b72;font-weight:bold">=</span>name,KeyType<span style="color:#ff7b72;font-weight:bold">=</span>HASH <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    --provisioned-throughput <span style="color:#79c0ff">ReadCapacityUnits</span><span style="color:#ff7b72;font-weight:bold">=</span>1,WriteCapacityUnits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>
+</span></span></code></pre></div><p><strong>Put Item to Table</strong></p>
 <p>The data schema <code>student_data.json</code> file in <a href="https://github.com/lushenle/cse546-project3/blob/main/student_data.json">GitHub repo</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws dynamodb batch-write-item --request-items file://student_data.json</code></pre></div>
-<p><strong>Create Repository</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws dynamodb batch-write-item --request-items file://student_data.json
+</span></span></code></pre></div><p><strong>Create Repository</strong></p>
 <p>The repository named <code>cse546-group1-project3</code>, After that, the container image will be pushed to this repo.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ecr create-repository <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --repository-name cse546-group1-project3</code></pre></div>
-<h1 id="lambda-function">Lambda Function</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws ecr create-repository <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    --repository-name cse546-group1-project3
+</span></span></code></pre></div><h1 id="lambda-function">Lambda Function</h1>
 <p>Before we actually start writing the lambda handle, let&rsquo;s create some of the methods we need to use, e.g. to download the video and upload the results to S3’s method:</p>
-
 <ul>
-<li><p>Function to read the &lsquo;encoding&rsquo; file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">open_encoding</span>(filename):
-file <span style="color:#f92672">=</span> open(filename, <span style="color:#e6db74">&#39;rb&#39;</span>)
-data <span style="color:#f92672">=</span> pickle<span style="color:#f92672">.</span>load(file)
-file<span style="color:#f92672">.</span>close()
-<span style="color:#66d9ef">return</span> data</code></pre></div></li>
-
-<li><p>Function to download object from input bucket</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">download_object</span>(bucket_name, item, dest):
-<span style="color:#66d9ef">try</span>:
-    s3<span style="color:#f92672">.</span>download_file(bucket_name, item, dest)
-    print(<span style="color:#e6db74">&#39;Ok&#39;</span>)
-<span style="color:#66d9ef">except</span> ClientError <span style="color:#66d9ef">as</span> e:
-    <span style="color:#66d9ef">if</span> e<span style="color:#f92672">.</span>response[<span style="color:#e6db74">&#39;Error&#39;</span>][<span style="color:#e6db74">&#39;Code&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;404&#39;</span>:
-        print(<span style="color:#e6db74">&#39;The video does not exist: s3://</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(bucket_name, item))
-    <span style="color:#66d9ef">else</span>:
-        <span style="color:#66d9ef">raise</span>
-<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span></code></pre></div></li>
-
-<li><p>Function to upload result to S3 output bucket</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_object</span>(objects, bucket_name, item):
-<span style="color:#66d9ef">try</span>:
-    s3<span style="color:#f92672">.</span>upload_file(objects, bucket_name, item)
-    print(<span style="color:#e6db74">&#39;Upload Successful&#39;</span>)
-<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">FileNotFoundError</span>:
-    print(<span style="color:#e6db74">&#39;The file was not found&#39;</span>)
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-<span style="color:#66d9ef">except</span> ClientError:
-    print(<span style="color:#e6db74">&#39;ClientError...&#39;</span>)
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span></code></pre></div></li>
+<li>Function to read the &rsquo;encoding&rsquo; file:</li>
 </ul>
-
-<p>Python&rsquo;s built-in <code>os</code> module can execute system commands for us, and we&rsquo;ll use it to execute the ffmpeg command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">open_encoding</span>(filename):
+</span></span><span style="display:flex;"><span>    file <span style="color:#ff7b72;font-weight:bold">=</span> open(filename, <span style="color:#a5d6ff">&#39;rb&#39;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff7b72;font-weight:bold">=</span> pickle<span style="color:#ff7b72;font-weight:bold">.</span>load(file)
+</span></span><span style="display:flex;"><span>    file<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> data
+</span></span></code></pre></div><ul>
+<li>Function to download object from input bucket</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">download_object</span>(bucket_name, item, dest):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        s3<span style="color:#ff7b72;font-weight:bold">.</span>download_file(bucket_name, item, dest)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#39;Ok&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">except</span> ClientError <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> e<span style="color:#ff7b72;font-weight:bold">.</span>response[<span style="color:#a5d6ff">&#39;Error&#39;</span>][<span style="color:#a5d6ff">&#39;Code&#39;</span>] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;404&#39;</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#a5d6ff">&#39;The video does not exist: s3://</span><span style="color:#a5d6ff">{}</span><span style="color:#a5d6ff">/</span><span style="color:#a5d6ff">{}</span><span style="color:#a5d6ff">&#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>format(bucket_name, item))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">True</span>
+</span></span></code></pre></div><ul>
+<li>Function to upload result to S3 output bucket</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">upload_object</span>(objects, bucket_name, item):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        s3<span style="color:#ff7b72;font-weight:bold">.</span>upload_file(objects, bucket_name, item)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#39;Upload Successful&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">FileNotFoundError</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#39;The file was not found&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">except</span> ClientError:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#39;ClientError...&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">True</span>
+</span></span></code></pre></div><p>Python&rsquo;s built-in <code>os</code> module can execute system commands for us, and we&rsquo;ll use it to execute the ffmpeg command:</p>
 <pre tabindex="0"><code class="language-pythn" data-lang="pythn">path = &#34;/tmp/&#34;
 
-os.system(&#39;ffmpeg -i &#39; + str(video_file_path) + &#39; -r 1 &#39; + str(path) + &#39;image-%3d.jpeg&#39; + &#39; -loglevel 8&#39;)</code></pre>
-<p>Listening bucket event, and download user upload video:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">bucket <span style="color:#f92672">=</span> event[<span style="color:#e6db74">&#39;Records&#39;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;s3&#39;</span>][<span style="color:#e6db74">&#39;bucket&#39;</span>][<span style="color:#e6db74">&#39;name&#39;</span>]
-
-
-key <span style="color:#f92672">=</span> urllib<span style="color:#f92672">.</span>parse<span style="color:#f92672">.</span>unquote_plus(
-    event[<span style="color:#e6db74">&#39;Records&#39;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;s3&#39;</span>][<span style="color:#e6db74">&#39;object&#39;</span>][<span style="color:#e6db74">&#39;key&#39;</span>],
-    encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>)
-
-path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/tmp/&#39;</span>
-video_file_path <span style="color:#f92672">=</span> str(path) <span style="color:#f92672">+</span> key
-
-download_object(bucket, key, video_file_path)</code></pre></div>
-<p>Recognize faces from Python:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">face_image <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>load_image_file(
-    str(path) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;image-001.jpeg&#39;</span>)
-face_encoding <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>face_encodings(face_image)[<span style="color:#ae81ff">0</span>]</code></pre></div>
-<p>For each known face, determine whether the current face matches it,and the matching name is stored in the result:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> encoding <span style="color:#f92672">in</span> enumerate(total_face_encoding[<span style="color:#e6db74">&#39;encoding&#39;</span>]):
-    match <span style="color:#f92672">=</span> face_recognition<span style="color:#f92672">.</span>compare_faces(
-        [encoding[<span style="color:#ae81ff">1</span>]], face_encoding)
-    <span style="color:#66d9ef">if</span> match[<span style="color:#ae81ff">0</span>]:
-        result <span style="color:#f92672">=</span> total_face_encoding[<span style="color:#e6db74">&#39;name&#39;</span>][encoding[<span style="color:#ae81ff">0</span>]]
-        <span style="color:#66d9ef">break</span></code></pre></div>
-<p>Query for matching records in dynamodb:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">response <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span>get_item(
-    Key<span style="color:#f92672">=</span>{
-        <span style="color:#e6db74">&#39;name&#39;</span>: result
-    }
-)
-item <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;Item&#39;</span>]</code></pre></div>
-<p>Creating csv object, and write the content to a CSV file and upload to output bucket:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">csv_name <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
-
-<span style="color:#66d9ef">with</span> open(path <span style="color:#f92672">+</span> csv_name, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> f:
-    writer <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>writer(f)
-    writer<span style="color:#f92672">.</span>writerow([item[<span style="color:#e6db74">&#39;name&#39;</span>], item[<span style="color:#e6db74">&#39;major&#39;</span>], item[<span style="color:#e6db74">&#39;year&#39;</span>]])
-
-upload_object(path <span style="color:#f92672">+</span> csv_name, output_bucket, csv_name)</code></pre></div>
-<p>Here&rsquo;s the complete Handler Function: <a href="https://github.com/lushenle/cse546-project3/blob/main/handler.py">handler.py</a></p>
-
+os.system(&#39;ffmpeg -i &#39; + str(video_file_path) + &#39; -r 1 &#39; + str(path) + &#39;image-%3d.jpeg&#39; + &#39; -loglevel 8&#39;)
+</code></pre><p>Listening bucket event, and download user upload video:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bucket <span style="color:#ff7b72;font-weight:bold">=</span> event[<span style="color:#a5d6ff">&#39;Records&#39;</span>][<span style="color:#a5d6ff">0</span>][<span style="color:#a5d6ff">&#39;s3&#39;</span>][<span style="color:#a5d6ff">&#39;bucket&#39;</span>][<span style="color:#a5d6ff">&#39;name&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#ff7b72;font-weight:bold">=</span> urllib<span style="color:#ff7b72;font-weight:bold">.</span>parse<span style="color:#ff7b72;font-weight:bold">.</span>unquote_plus(
+</span></span><span style="display:flex;"><span>    event[<span style="color:#a5d6ff">&#39;Records&#39;</span>][<span style="color:#a5d6ff">0</span>][<span style="color:#a5d6ff">&#39;s3&#39;</span>][<span style="color:#a5d6ff">&#39;object&#39;</span>][<span style="color:#a5d6ff">&#39;key&#39;</span>],
+</span></span><span style="display:flex;"><span>    encoding<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;utf-8&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;/tmp/&#39;</span>
+</span></span><span style="display:flex;"><span>video_file_path <span style="color:#ff7b72;font-weight:bold">=</span> str(path) <span style="color:#ff7b72;font-weight:bold">+</span> key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>download_object(bucket, key, video_file_path)
+</span></span></code></pre></div><p>Recognize faces from Python:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>face_image <span style="color:#ff7b72;font-weight:bold">=</span> face_recognition<span style="color:#ff7b72;font-weight:bold">.</span>load_image_file(
+</span></span><span style="display:flex;"><span>    str(path) <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">&#39;image-001.jpeg&#39;</span>)
+</span></span><span style="display:flex;"><span>face_encoding <span style="color:#ff7b72;font-weight:bold">=</span> face_recognition<span style="color:#ff7b72;font-weight:bold">.</span>face_encodings(face_image)[<span style="color:#a5d6ff">0</span>]
+</span></span></code></pre></div><p>For each known face, determine whether the current face matches it,and the matching name is stored in the result:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">for</span> encoding <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(total_face_encoding[<span style="color:#a5d6ff">&#39;encoding&#39;</span>]):
+</span></span><span style="display:flex;"><span>    match <span style="color:#ff7b72;font-weight:bold">=</span> face_recognition<span style="color:#ff7b72;font-weight:bold">.</span>compare_faces(
+</span></span><span style="display:flex;"><span>        [encoding[<span style="color:#a5d6ff">1</span>]], face_encoding)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> match[<span style="color:#a5d6ff">0</span>]:
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff7b72;font-weight:bold">=</span> total_face_encoding[<span style="color:#a5d6ff">&#39;name&#39;</span>][encoding[<span style="color:#a5d6ff">0</span>]]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">break</span>
+</span></span></code></pre></div><p>Query for matching records in dynamodb:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>response <span style="color:#ff7b72;font-weight:bold">=</span> table<span style="color:#ff7b72;font-weight:bold">.</span>get_item(
+</span></span><span style="display:flex;"><span>    Key<span style="color:#ff7b72;font-weight:bold">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#39;name&#39;</span>: result
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>item <span style="color:#ff7b72;font-weight:bold">=</span> response[<span style="color:#a5d6ff">&#39;Item&#39;</span>]
+</span></span></code></pre></div><p>Creating csv object, and write the content to a CSV file and upload to output bucket:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>csv_name <span style="color:#ff7b72;font-weight:bold">=</span> key<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#39;.&#39;</span>)[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">with</span> open(path <span style="color:#ff7b72;font-weight:bold">+</span> csv_name, mode<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;w&#39;</span>) <span style="color:#ff7b72">as</span> f:
+</span></span><span style="display:flex;"><span>    writer <span style="color:#ff7b72;font-weight:bold">=</span> csv<span style="color:#ff7b72;font-weight:bold">.</span>writer(f)
+</span></span><span style="display:flex;"><span>    writer<span style="color:#ff7b72;font-weight:bold">.</span>writerow([item[<span style="color:#a5d6ff">&#39;name&#39;</span>], item[<span style="color:#a5d6ff">&#39;major&#39;</span>], item[<span style="color:#a5d6ff">&#39;year&#39;</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>upload_object(path <span style="color:#ff7b72;font-weight:bold">+</span> csv_name, output_bucket, csv_name)
+</span></span></code></pre></div><p>Here&rsquo;s the complete Handler Function: <a href="https://github.com/lushenle/cse546-project3/blob/main/handler.py">handler.py</a></p>
 <h1 id="build-container-image">Build Container Image</h1>
-
 <p>Our function will be deployed using the container image, so we also need to package the functions into the container image.</p>
-
 <blockquote>
 <p>Note in particular that all directories other than <code>/tmp</code> are read-only during the function run.</p>
 </blockquote>
-
 <h2 id="create-dockerfile">Create Dockerfile</h2>
-
 <p>Before performing face recognition, we need to extract each frame from the video uploaded by the user. Here, <a href="https://www.ffmpeg.org/">ffmpeg</a> is a very impressive tool for those who know, we use the ffmpeg tool to extract frames from the video.</p>
-
 <p>We are using a Debian Linux based base image and can install ffmpeg on the container image using the apt command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> python-alpine</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt install -y ffmpeg <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    <span style="color:#f92672">&amp;&amp;</span> apt clean<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
-<p>Add the <code>encoding</code> file which stores the names of the known faces to container image:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> encoding <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
-<p>In this project, instead of using the base container image provided by AWS, we used a custom one, so we also had to create the entrypoint script <code>entry.sh
-</code> and package it inside the image:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/sh
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>AWS_LAMBDA_RUNTIME_API<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    exec /usr/bin/aws-lambda-rie /usr/local/bin/python -m awslambdaric $1
-<span style="color:#66d9ef">else</span>
-    exec /usr/local/bin/python -m awslambdaric $1
-<span style="color:#66d9ef">fi</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> entry.sh /<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> chmod <span style="color:#ae81ff">777</span> /entry.sh<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
-<p>Install the dependent packages for Python runtime:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> requirements.txt <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> python<span style="color:#e6db74">${</span>RUNTIME_VERSION<span style="color:#e6db74">}</span> -m pip install -r requirements.txt --target <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>...</code></pre></div>
-<p>The most important thing, of course, is to package the function into the container image, so let me finish it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">COPY</span> handler.py <span style="color:#e6db74">${</span>FUNCTION_DIR<span style="color:#e6db74">}</span></code></pre></div>
-<p>Finally, set the CMD to our handler (could also be done as a parameter override outside of the Dockerfile):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile">...<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENTRYPOINT</span> [ <span style="color:#e6db74">&#34;/entry.sh&#34;</span> ]<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [ <span style="color:#e6db74">&#34;handler.face_recognition_handler&#34;</span> ]</code></pre></div>
-<p>The finished <a href="https://github.com/lushenle/cse546-project3/blob/main/Dockerfile">Dockerfile</a> can be viewed in my <a href="https://github.com/lushenle/cse546-project3">GitHub repo</a>.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#ff7b72">FROM</span><span style="color:#a5d6ff"> python-alpine</span><span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">RUN</span> apt install -y ffmpeg <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> apt clean<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span>...<span style="color:#f85149">
+</span></span></span></code></pre></div><p>Add the <code>encoding</code> file which stores the names of the known faces to container image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span>...<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">ADD</span> encoding <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">FUNCTION_DIR</span><span style="color:#a5d6ff">}</span><span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span>...<span style="color:#f85149">
+</span></span></span></code></pre></div><p>In this project, instead of using the base container image provided by AWS, we used a custom one, so we also had to create the entrypoint script <code>entry.sh </code> and package it inside the image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> -z <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">AWS_LAMBDA_RUNTIME_API</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">]</span>; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>    exec /usr/bin/aws-lambda-rie /usr/local/bin/python -m awslambdaric <span style="color:#79c0ff">$1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>    exec /usr/local/bin/python -m awslambdaric <span style="color:#79c0ff">$1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span>...<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">ADD</span> entry.sh /<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">RUN</span> chmod <span style="color:#a5d6ff">777</span> /entry.sh<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span>...<span style="color:#f85149">
+</span></span></span></code></pre></div><p>Install the dependent packages for Python runtime:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span>...<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">COPY</span> requirements.txt <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">FUNCTION_DIR</span><span style="color:#a5d6ff">}</span><span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">RUN</span> python<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">RUNTIME_VERSION</span><span style="color:#a5d6ff">}</span> -m pip install -r requirements.txt --target <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">FUNCTION_DIR</span><span style="color:#a5d6ff">}</span><span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span>...<span style="color:#f85149">
+</span></span></span></code></pre></div><p>The most important thing, of course, is to package the function into the container image, so let me finish it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#ff7b72">COPY</span> handler.py <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">FUNCTION_DIR</span><span style="color:#a5d6ff">}</span><span style="color:#f85149">
+</span></span></span></code></pre></div><p>Finally, set the CMD to our handler (could also be done as a parameter override outside of the Dockerfile):</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span>...<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">ENTRYPOINT</span> [ <span style="color:#a5d6ff">&#34;/entry.sh&#34;</span> ]<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">CMD</span> [ <span style="color:#a5d6ff">&#34;handler.face_recognition_handler&#34;</span> ]<span style="color:#f85149">
+</span></span></span></code></pre></div><p>The finished <a href="https://github.com/lushenle/cse546-project3/blob/main/Dockerfile">Dockerfile</a> can be viewed in my <a href="https://github.com/lushenle/cse546-project3">GitHub repo</a>.</p>
 <h2 id="build-container-image-1">Build Container Image</h2>
-
 <p>For simplicity, convenience, and network independence, we use GitHub Actions (Github Action is a service offered by Github that has similar functionality as other CI tools like Jenkins, Travis, or CircleCI.) to build the container image.</p>
-
 <p><strong>Workflow</strong></p>
-
 <p>In order to use Github Actions, we must define a workflow. Workflow is basically an automated procedure that’s made up of one or more jobs. It can be triggered by 3 different ways:</p>
-
 <ul>
 <li>By an event that happens on the Github repository.</li>
 <li>By setting a repetitive schedule.</li>
 <li>Or manually clicking on the run workflow button on the repository UI.</li>
 </ul>
-
 <p>To create a workflow, we just need to add a <code>.yml</code> file to the <code>.github/workflows</code> folder in our repository. For example, this is a simple workflow file <code>build.yml</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and Push Image to Repositories</span>
-
-<span style="color:#f92672">on</span>:
-  <span style="color:#f92672">push</span>:
-    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
-  <span style="color:#f92672">schedule</span>:
-  	- <span style="color:#f92672">cron</span>:  <span style="color:#e6db74">&#39;*/15 * * * *&#39;</span>
-
-<span style="color:#f92672">jobs</span>:
-
-  <span style="color:#f92672">build</span>:
-    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span></code></pre></div>
-<p>The name of this workflow is <code>Build and Push Image to Repositories</code>. We can define how it will be triggered using the <code>on</code> keyword.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Build and Push Image to Repositories</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">on</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">push</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">branches</span>:<span style="color:#6e7681"> </span>[<span style="color:#6e7681"> </span><span style="color:#a5d6ff">main ]</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">schedule</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  	</span>- <span style="color:#7ee787">cron</span>:<span style="color:#6e7681">  </span><span style="color:#a5d6ff">&#39;*/15 * * * *&#39;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">jobs</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">build</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">runs-on</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">ubuntu-latest</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>The name of this workflow is <code>Build and Push Image to Repositories</code>. We can define how it will be triggered using the <code>on</code> keyword.</p>
 <p>In this flow, there&rsquo;s an event that will trigger the workflow whenever a change is pushed to the master branch, and another scheduled trigger that will run the workflow every 15 minute.</p>
-
 <p>Then we define the list of jobs to run in the <code>jobs</code> section of the workflow yaml file.</p>
-
 <p><strong>Runner</strong></p>
-
 <p>In order to run the jobs, we must specify a runner for each of them. A runner is simply a server that listens for available jobs, and it will run only 1 job at a time.</p>
-
 <p>We can use Github hosted runner directly, or specify our own self-hosted runner.</p>
-
 <p>The runners will run the jobs, then report the their progress, logs, and results back to Github, so we can easily check it on the UI of the repository.</p>
-
 <p>We use the run-on keyword to specify the runner we want to use:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">jobs</span>:
-
-  <span style="color:#f92672">build</span>:
-    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span></code></pre></div>
-<p>In this workflow, we’re using Github’s hosted runner for Ubuntu’s latest version.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#7ee787">jobs</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">build</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">runs-on</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">ubuntu-latest</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>In this workflow, we’re using Github’s hosted runner for Ubuntu’s latest version.</p>
 <p><strong>Job</strong></p>
-
 <p>A job is a set of steps that will be executed on the same runner.</p>
-
 <p>Normally all jobs in the workflow run in parallel, except when you have some jobs that depend on each other, then they will be run serially.</p>
-
 <p>The jobs are listed inside the workflow under the <code>jobs</code> keyword:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">jobs</span>:
-
-  <span style="color:#f92672">build</span>:
-    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
-
-    <span style="color:#f92672">steps</span>:
-      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Check out code</span>
-        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
-
-      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Get hash</span>
-        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo &#34;::set-output name=sha_short::$(git rev-parse --short HEAD)&#34;</span>
-        <span style="color:#f92672">id</span>: <span style="color:#ae81ff">sha</span>
-
-      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up QEMU</span>
-        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-qemu-action@v1</span>
-
-      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up Docker Buildx</span>
-        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-buildx-action@v1</span></code></pre></div>
-<p>After the container image is built, we will push the image to both AWS ECR and docker hub,  before you can push you need to login container repository:</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#7ee787">jobs</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">build</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">runs-on</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">ubuntu-latest</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">steps</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Check out code</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">actions/checkout@v2</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Get hash</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">run</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">echo &#34;::set-output name=sha_short::$(git rev-parse --short HEAD)&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">id</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">sha</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Set up QEMU</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">docker/setup-qemu-action@v1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Set up Docker Buildx</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">docker/setup-buildx-action@v1</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>After the container image is built, we will push the image to both AWS ECR and docker hub,  before you can push you need to login container repository:</p>
 <p>Add credentials in Github secrets, you can do this by going to settings of your repository and then <code>secrets</code> tab, where you add them:</p>
-
-<p><img src="https://i.imgur.com/PoS8GmX.png" alt="Add_Secrets" /></p>
-
+<p><img src="https://i.imgur.com/PoS8GmX.png" alt="Add_Secrets"></p>
 <ul>
 <li><code>DOCKER_USERNAME</code>: Docker hub username</li>
 <li><code>DOCKER_PASSWORD</code>: Docker hub login password</li>
 <li><code>AWS_ACCESS_KEY_ID</code>: AWS access key ID</li>
-
-<li><p><code>AWS_SECRET_ACCESS_KEY</code>: AWS secret access key</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Login to DockerHub</span>
-    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/login-action@v1</span>
-    <span style="color:#f92672">with</span>:
-      <span style="color:#f92672">username</span>: <span style="color:#ae81ff">${{ secrets.DOCKER_USERNAME }}</span>
-      <span style="color:#f92672">password</span>: <span style="color:#ae81ff">${{ secrets.DOCKER_PASSWORD }}</span>
-
-  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Configure AWS credentials</span>
-    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">aws-actions/configure-aws-credentials@v1</span>
-    <span style="color:#f92672">with</span>:
-      <span style="color:#f92672">aws-access-key-id</span>: <span style="color:#ae81ff">${{ secrets.AWS_ACCESS_KEY_ID }}</span>
-      <span style="color:#f92672">aws-secret-access-key</span>: <span style="color:#ae81ff">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span>
-      <span style="color:#f92672">aws-region</span>: <span style="color:#ae81ff">ap-northeast-2</span>
-
-  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Login to Amazon ECR</span>
-    <span style="color:#f92672">id</span>: <span style="color:#ae81ff">login-ecr</span>
-    <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">aws-actions/amazon-ecr-login@v1</span></code></pre></div></li>
+<li><code>AWS_SECRET_ACCESS_KEY</code>: AWS secret access key</li>
 </ul>
-
-<p>Build and Push image:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build, tag, and push image</span>
-        <span style="color:#f92672">env</span>:
-          <span style="color:#f92672">ECR_REGISTRY</span>: <span style="color:#ae81ff">${{ steps.login-ecr.outputs.registry }}</span>
-          <span style="color:#f92672">ECR_REPOSITORY</span>: <span style="color:#ae81ff">cse546-group1-project3</span>
-          <span style="color:#f92672">IMAGE_TAG</span>: <span style="color:#ae81ff">${{ steps.sha.outputs.sha_short }}</span>
-        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
-</span><span style="color:#e6db74">          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-</span><span style="color:#e6db74">          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-</span><span style="color:#e6db74">          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ishenle/asu-cse546-aws:project3-$IMAGE_TAG
-</span><span style="color:#e6db74">          docker push ishenle/asu-cse546-aws:project3-$IMAGE_TAG</span>          </code></pre></div>
-<p>Here&rsquo;s the complete workflow file <a href="https://github.com/lushenle/cse546-project3/blob/main/.github/workflows/build.yml">build.yml</a></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Login to DockerHub</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">docker/login-action@v1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">with</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">username</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ secrets.DOCKER_USERNAME }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">password</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ secrets.DOCKER_PASSWORD }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Configure AWS credentials</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">aws-actions/configure-aws-credentials@v1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">with</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">aws-access-key-id</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ secrets.AWS_ACCESS_KEY_ID }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">aws-secret-access-key</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">aws-region</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">ap-northeast-2</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Login to Amazon ECR</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">id</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">login-ecr</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">uses</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">aws-actions/amazon-ecr-login@v1</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Build and Push image:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Build, tag, and push image</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">env</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">ECR_REGISTRY</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ steps.login-ecr.outputs.registry }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">ECR_REPOSITORY</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">cse546-group1-project3</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">IMAGE_TAG</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">${{ steps.sha.outputs.sha_short }}</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">run</span>:<span style="color:#6e7681"> </span>|<span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ishenle/asu-cse546-aws:project3-$IMAGE_TAG
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">          docker push ishenle/asu-cse546-aws:project3-$IMAGE_TAG</span><span style="color:#6e7681">          
+</span></span></span></code></pre></div><p>Here&rsquo;s the complete workflow file <a href="https://github.com/lushenle/cse546-project3/blob/main/.github/workflows/build.yml">build.yml</a></p>
 <h1 id="deploy">Deploy</h1>
-
 <p>The Lambda console provides a code editor for non-compiled languages that lets you modify and test code quickly.</p>
-
 <h2 id="create-the-function">Create the function</h2>
-
 <p><strong>To create a Lambda function with the console</strong></p>
-
 <ul>
-<li><p>Open the <a href="https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2">Functions page</a> on the Lambda console.</p></li>
-
-<li><p>Choose Create function.</p></li>
-
-<li><p>Select Container image.</p></li>
-
-<li><p>Enter the name of the Function name in the text input field.</p></li>
-
-<li><p>Click Browse images, select container image</p></li>
-
-<li><p>Click Create function</p></li>
+<li>
+<p>Open the <a href="https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2">Functions page</a> on the Lambda console.</p>
+</li>
+<li>
+<p>Choose Create function.</p>
+</li>
+<li>
+<p>Select Container image.</p>
+</li>
+<li>
+<p>Enter the name of the Function name in the text input field.</p>
+</li>
+<li>
+<p>Click Browse images, select container image</p>
+</li>
+<li>
+<p>Click Create function</p>
+</li>
 </ul>
-
 <p>Refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/getting-started-create-function.html">Create a Lambda function with the console</a></p>
-
 <h2 id="add-s3-tirgger">Add S3 tirgger</h2>
-
 <p>Open our created function configure, choose Add trigger, as shown below:</p>
-
-<p><img src="https://imgur.com/TBfk3Co.png" alt="add_trigger" /></p>
-
+<p><img src="https://imgur.com/TBfk3Co.png" alt="add_trigger"></p>
 <h1 id="testing">Testing</h1>
-
 <p>There are various ways to test the lambda function,can refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html">python-exceptions</a> in this case using the Lambda console.</p>
-
 <p><strong>To invoke function on the Lambda console:</strong></p>
-
 <ul>
 <li>Open the <a href="https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2#/functions">Functions page</a> on the Lambda console.</li>
 <li>Choose the function to test, and choose Test.</li>
@@ -703,58 +641,51 @@ upload_object(path <span style="color:#f92672">+</span> csv_name, output_bucket,
 <li>Choose Save changes.</li>
 <li>Choose Test.</li>
 </ul>
-
 <p>The test data:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#f92672">&#34;Records&#34;</span>: [
-    {
-      <span style="color:#f92672">&#34;eventVersion&#34;</span>: <span style="color:#e6db74">&#34;2.0&#34;</span>,
-      <span style="color:#f92672">&#34;eventSource&#34;</span>: <span style="color:#e6db74">&#34;aws:s3&#34;</span>,
-      <span style="color:#f92672">&#34;awsRegion&#34;</span>: <span style="color:#e6db74">&#34;ap-northeast-2&#34;</span>,
-      <span style="color:#f92672">&#34;eventTime&#34;</span>: <span style="color:#e6db74">&#34;1970-01-01T00:00:00.000Z&#34;</span>,
-      <span style="color:#f92672">&#34;eventName&#34;</span>: <span style="color:#e6db74">&#34;ObjectCreated:Put&#34;</span>,
-      <span style="color:#f92672">&#34;userIdentity&#34;</span>: {
-        <span style="color:#f92672">&#34;principalId&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE&#34;</span>
-      },
-      <span style="color:#f92672">&#34;requestParameters&#34;</span>: {
-        <span style="color:#f92672">&#34;sourceIPAddress&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>
-      },
-      <span style="color:#f92672">&#34;responseElements&#34;</span>: {
-        <span style="color:#f92672">&#34;x-amz-request-id&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE123456789&#34;</span>,
-        <span style="color:#f92672">&#34;x-amz-id-2&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE123/5678abcdefghijklambdaisawesome/mnopqrstuvwxyzABCDEFGH&#34;</span>
-      },
-      <span style="color:#f92672">&#34;s3&#34;</span>: {
-        <span style="color:#f92672">&#34;s3SchemaVersion&#34;</span>: <span style="color:#e6db74">&#34;1.0&#34;</span>,
-        <span style="color:#f92672">&#34;configurationId&#34;</span>: <span style="color:#e6db74">&#34;testConfigRule&#34;</span>,
-        <span style="color:#f92672">&#34;bucket&#34;</span>: {
-          <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;cse546-project3-input-group1&#34;</span>,
-          <span style="color:#f92672">&#34;ownerIdentity&#34;</span>: {
-            <span style="color:#f92672">&#34;principalId&#34;</span>: <span style="color:#e6db74">&#34;EXAMPLE&#34;</span>
-          },
-          <span style="color:#f92672">&#34;arn&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::cse546-project3-input-group1&#34;</span>
-        },
-        <span style="color:#f92672">&#34;object&#34;</span>: {
-          <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;test_0.mp4&#34;</span>,
-          <span style="color:#f92672">&#34;size&#34;</span>: <span style="color:#ae81ff">322560</span>,
-          <span style="color:#f92672">&#34;eTag&#34;</span>: <span style="color:#e6db74">&#34;0123456789abcdef0123456789abcdef&#34;</span>,
-          <span style="color:#f92672">&#34;sequencer&#34;</span>: <span style="color:#e6db74">&#34;0A1B2C3D4E5F678901&#34;</span>
-        }
-      }
-    }
-  ]
-}</code></pre></div>
-<h1 id="monitoring">Monitoring</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;Records&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;eventVersion&#34;</span>: <span style="color:#a5d6ff">&#34;2.0&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;eventSource&#34;</span>: <span style="color:#a5d6ff">&#34;aws:s3&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;awsRegion&#34;</span>: <span style="color:#a5d6ff">&#34;ap-northeast-2&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;eventTime&#34;</span>: <span style="color:#a5d6ff">&#34;1970-01-01T00:00:00.000Z&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;eventName&#34;</span>: <span style="color:#a5d6ff">&#34;ObjectCreated:Put&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;userIdentity&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;principalId&#34;</span>: <span style="color:#a5d6ff">&#34;EXAMPLE&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;requestParameters&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;sourceIPAddress&#34;</span>: <span style="color:#a5d6ff">&#34;127.0.0.1&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;responseElements&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;x-amz-request-id&#34;</span>: <span style="color:#a5d6ff">&#34;EXAMPLE123456789&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;x-amz-id-2&#34;</span>: <span style="color:#a5d6ff">&#34;EXAMPLE123/5678abcdefghijklambdaisawesome/mnopqrstuvwxyzABCDEFGH&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;s3&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;s3SchemaVersion&#34;</span>: <span style="color:#a5d6ff">&#34;1.0&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;configurationId&#34;</span>: <span style="color:#a5d6ff">&#34;testConfigRule&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;bucket&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;cse546-project3-input-group1&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;ownerIdentity&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#7ee787">&#34;principalId&#34;</span>: <span style="color:#a5d6ff">&#34;EXAMPLE&#34;</span>
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;arn&#34;</span>: <span style="color:#a5d6ff">&#34;arn:aws:s3:::cse546-project3-input-group1&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;object&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;key&#34;</span>: <span style="color:#a5d6ff">&#34;test_0.mp4&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;size&#34;</span>: <span style="color:#a5d6ff">322560</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;eTag&#34;</span>: <span style="color:#a5d6ff">&#34;0123456789abcdef0123456789abcdef&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;sequencer&#34;</span>: <span style="color:#a5d6ff">&#34;0A1B2C3D4E5F678901&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="monitoring">Monitoring</h1>
 <p>You can refer to <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-tracing.html">Instrumenting Python code in AWS Lambda</a>, or view CloudWatch dashboard.</p>
-
 <p>Monitoring methods provided by AWS: <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-monitoring.html">Monitoring and troubleshooting Lambda applications</a></p>
-
 <h1 id="summary">Summary</h1>
-
 <p>Our cloud app implement a smart classroom assistant for educators. This assistant takes videos from  the user’s classroom, performs face recognition on the collected videos, looks up the recognized students in the database, and returns the relevant academic information of each student back to the user.</p>
-
 <h1 id="reference">Reference</h1>
-
 <ul>
 <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html">Lambda function handler in Python</a></li>
 <li><a href="https://pypi.org/project/face-recognition/">Face Recognition: Recognize faces from Python or from the command line</a></li>
@@ -884,7 +815,7 @@ upload_object(path <span style="color:#f92672">+</span> csv_name, output_bucket,
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 Shenle Lu. All Rights Reserved
+    &copy; 2023 Shenle Lu. All Rights Reserved
   </span>
 </footer>
 
@@ -1000,7 +931,7 @@ upload_object(path <span style="color:#f92672">+</span> csv_name, output_bucket,
     
     <h4 id="about-card-name">Shenle Lu</h4>
     
-      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
     
     
       <div id="about-card-job">

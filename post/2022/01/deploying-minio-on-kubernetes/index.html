@@ -16,7 +16,7 @@
     
   },
   "name":"Shenle Lu\u0027s Blog",
-  "description":"\u003cp\u003eMinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.\u003c\/p\u003e\n\n\u003cp\u003eMinIO is different in that it was designed from the beginning as a private\/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.\u003c\/p\u003e",
+  "description":"\u003cp\u003eMinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.\u003c\/p\u003e\n\u003cp\u003eMinIO is different in that it was designed from the beginning as a private\/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.\u003c\/p\u003e",
   "url":"https:\/\/shenle.lu\/post\/2022\/01\/deploying-minio-on-kubernetes\/",
   "keywords":"[Container, Kubernetes, Golang]"
 }
@@ -25,16 +25,14 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="Container, Kubernetes, Golang">
 <meta name="description" content="MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.
-
 MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.">
 
 
 <meta property="og:description" content="MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.
-
 MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Deploying MinIO on Kubernetes">
@@ -43,10 +41,8 @@ MinIO is different in that it was designed from the beginning as a private/hybri
 <meta property="twitter:url" content="https://shenle.lu/post/2022/01/deploying-minio-on-kubernetes/">
 <meta property="og:site_name" content="Shenle Lu&#39;s Blog">
 <meta property="og:description" content="MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.
-
 MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.">
 <meta name="twitter:description" content="MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.
-
 MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.">
 <meta property="og:locale" content="en-us">
 
@@ -164,7 +160,7 @@ if (!doNotTrack) {
         </a>
         <h4 class="sidebar-profile-name">Shenle Lu</h4>
         
-          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
         
       </div>
     
@@ -337,170 +333,147 @@ if (!doNotTrack) {
           <div class="post-content markdown">
             <div class="main-content-wrap">
               <p>MinIO is a high-performance object storage solution with native support for Kubernetes deployments. minIO provides an API compatible with Amazon Web Services S3 and supports all core S3 features. MinIO is released under the GNU General Public License v3.0.</p>
-
 <p>MinIO is different in that it was designed from the beginning as a private/hybrid cloud object storage. Because MinIO is built specifically to serve objects, the single-tier architecture allows for all the necessary functionality. It is a cloud-native object server that is simultaneously high-performance, scalable, and lightweight.</p>
-
 <h1 id="table-of-contents">Table of Contents</h1>
-<nav id="TableOfContents">
-<ul>
-<li><a href="#storageclass">StorageClass</a></li>
-<li><a href="#create-minio-headless-service">Create Minio Headless Service</a></li>
-<li><a href="#create-minio-statefulset">Create Minio StatefulSet</a></li>
-<li><a href="#expose-service-using-ingress">Expose Service using Ingress</a></li>
-<li><a href="#access-minio">Access Minio</a></li>
-<li><a href="#reference">Reference</a></li>
-</ul>
-</nav>
-
+<nav id="TableOfContents"></nav>
 
 <h1 id="storageclass">StorageClass</h1>
-
 <p>The persistent volume used in this test is bare host directory, Since this is just a test, no additional StorageClass is prepared.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">...
-<span style="color:#f92672">volumeMounts</span>:
-  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">data</span>
-    <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/data</span>
-<span style="color:#f92672">volumes</span>:
-  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">data</span>
-    <span style="color:#f92672">hostPath</span>:
-      <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/storage/minio</span></code></pre></div>
-<h1 id="create-minio-headless-service">Create Minio Headless Service</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">...</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">volumeMounts</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">mountPath</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">/data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">volumes</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">hostPath</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">path</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">/storage/minio</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><h1 id="create-minio-headless-service">Create Minio Headless Service</h1>
 <p>Headless Service controls the domain within which StatefulSets are created. The domain managed by this Service takes the form: <code>$(service name).$(namespace).svc.cluster.local</code> (where <code>cluster.local</code> is the cluster domain), and the pods in this domain take the form: <code>$(pod-name-{i}).$(service name).$(namespace).svc.cluster.local</code>. This is required to get a DNS resolvable URL for each of the pods created within the Statefulset.</p>
-
 <p>This is the Headless service description:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-  <span style="color:#f92672">labels</span>:
-    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">minio</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">clusterIP</span>: <span style="color:#ae81ff">None</span>
-  <span style="color:#f92672">ports</span>:
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">9000</span>
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">console</span>
-      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">9001</span>
-  <span style="color:#f92672">selector</span>:
-    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">minio</span></code></pre></div>
-<p>Create the headless service</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f headless-svc.yaml</code></pre></div>
-<h1 id="create-minio-statefulset">Create Minio StatefulSet</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">apiVersion</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">v1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">kind</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Service</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">metadata</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">labels</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">app</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">spec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">clusterIP</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">None</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">ports</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">port</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9000</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">console</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">port</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9001</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">selector</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">app</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Create the headless service</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f headless-svc.yaml
+</span></span></code></pre></div><h1 id="create-minio-statefulset">Create Minio StatefulSet</h1>
 <p>A StatefulSet provides a deterministic name and a unique identity to each pod, making it easy to deploy stateful distributed applications. To launch distributed Minio user need to pass drive locations as parameters to the minio server command. Then the user need to run the same command on all the participating pods. StatefulSets offer a perfect way to handle this requirement.</p>
-
 <p>This is the StatefulSet description.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">StatefulSet</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">serviceName</span>: <span style="color:#ae81ff">minio</span>
-  <span style="color:#f92672">podManagementPolicy</span>: <span style="color:#ae81ff">Parallel</span>
-  <span style="color:#f92672">updateStrategy</span>:
-    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">RollingUpdate</span>
-  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">4</span>
-  <span style="color:#f92672">selector</span>:
-    <span style="color:#f92672">matchLabels</span>:
-      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">minio</span>
-  <span style="color:#f92672">template</span>:
-    <span style="color:#f92672">metadata</span>:
-      <span style="color:#f92672">labels</span>:
-        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">minio</span>
-    <span style="color:#f92672">spec</span>:
-      <span style="color:#f92672">nodeSelector</span>:
-        <span style="color:#f92672">minio_role</span>: <span style="color:#ae81ff">distributed</span>
-      <span style="color:#f92672">containers</span>:
-        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-          <span style="color:#f92672">env</span>:
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">MINIO_SERVER_URL</span>
-              <span style="color:#f92672">value</span>: <span style="color:#ae81ff">http://minio.idocker.io</span>
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">MINIO_BROWSER_REDIRECT_URL</span>
-              <span style="color:#f92672">value</span>: <span style="color:#ae81ff">http://console.minio.idocker.io</span>
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">MINIO_ROOT_USER</span>
-              <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;admin&#34;</span>
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">MINIO_ROOT_PASSWORD</span>
-              <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;passwd_for_admin&#34;</span>
-          <span style="color:#f92672">image</span>: <span style="color:#ae81ff">minio/minio:RELEASE.2022-01-08T03-11-54Z</span>
-          <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-          <span style="color:#f92672">args</span>:
-            - <span style="color:#ae81ff">server</span>
-            - <span style="color:#ae81ff">http://minio-{0...3}.minio.minio.svc.cluster.local/data</span>
-            - <span style="color:#e6db74">&#34;--console-address=:9001&#34;</span>
-          <span style="color:#f92672">ports</span>:
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">api</span>
-              <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">9000</span>
-              <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">9000</span>
-              <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">console</span>
-              <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">9001</span>
-              <span style="color:#f92672">hostPort</span>: <span style="color:#ae81ff">9001</span>
-              <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-          <span style="color:#f92672">resources</span>:
-            <span style="color:#f92672">limits</span>:
-              <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">2000m</span>
-              <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">2Gi</span>
-            <span style="color:#f92672">requests</span>:
-              <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">1000m</span>
-              <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">1Gi</span>
-          <span style="color:#f92672">livenessProbe</span>:
-            <span style="color:#f92672">exec</span>:
-              <span style="color:#f92672">command</span>: [<span style="color:#e6db74">&#34;curl&#34;</span>, <span style="color:#e6db74">&#34;-f&#34;</span>, <span style="color:#e6db74">&#34;http://localhost:9000/minio/health/live&#34;</span>]
-            <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">3</span>
-            <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">3</span>
-            <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">3</span>
-          <span style="color:#f92672">readinessProbe</span>:
-            <span style="color:#f92672">exec</span>:
-              <span style="color:#f92672">command</span>: [<span style="color:#e6db74">&#34;curl&#34;</span>, <span style="color:#e6db74">&#34;-f&#34;</span>, <span style="color:#e6db74">&#34;http://localhost:9000/minio/health/live&#34;</span>]
-            <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">3</span>
-            <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">2</span>
-            <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">1</span>
-          <span style="color:#f92672">volumeMounts</span>:
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">data</span>
-              <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/data</span>
-      <span style="color:#f92672">volumes</span>:
-        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">data</span>
-          <span style="color:#f92672">hostPath</span>:
-            <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/storage/minio</span></code></pre></div>
-<p>Create the StatefulSet.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f minio-dist-statefulset.yaml</code></pre></div>
-<h1 id="expose-service-using-ingress">Expose Service using Ingress</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">apiVersion</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">apps/v1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">kind</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">StatefulSet</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">metadata</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">spec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">serviceName</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">podManagementPolicy</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Parallel</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">updateStrategy</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">type</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">RollingUpdate</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">replicas</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">4</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">selector</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">matchLabels</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">app</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">template</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">metadata</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">labels</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">app</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">spec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">nodeSelector</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#7ee787">minio_role</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">distributed</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">containers</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">env</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">MINIO_SERVER_URL</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">value</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">http://minio.idocker.io</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">MINIO_BROWSER_REDIRECT_URL</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">value</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">http://console.minio.idocker.io</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">MINIO_ROOT_USER</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">value</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;admin&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">MINIO_ROOT_PASSWORD</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">value</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;passwd_for_admin&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">image</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio/minio:RELEASE.2022-01-08T03-11-54Z</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">imagePullPolicy</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">IfNotPresent</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">args</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#a5d6ff">server</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#a5d6ff">http://minio-{0...3}.minio.minio.svc.cluster.local/data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#a5d6ff">&#34;--console-address=:9001&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">ports</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">api</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">containerPort</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9000</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">hostPort</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9000</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">protocol</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">TCP</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">console</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">containerPort</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9001</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">hostPort</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9001</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">protocol</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">TCP</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">resources</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">limits</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">cpu</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">2000m</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">memory</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">2Gi</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">requests</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">cpu</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">1000m</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">memory</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">1Gi</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">livenessProbe</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">exec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">command</span>:<span style="color:#6e7681"> </span>[<span style="color:#a5d6ff">&#34;curl&#34;</span>,<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;-f&#34;</span>,<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;http://localhost:9000/minio/health/live&#34;</span>]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">initialDelaySeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">3</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">periodSeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">3</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">timeoutSeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">3</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">readinessProbe</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">exec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">command</span>:<span style="color:#6e7681"> </span>[<span style="color:#a5d6ff">&#34;curl&#34;</span>,<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;-f&#34;</span>,<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;http://localhost:9000/minio/health/live&#34;</span>]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">initialDelaySeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">3</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">periodSeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">2</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">timeoutSeconds</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">volumeMounts</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">              </span><span style="color:#7ee787">mountPath</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">/data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">volumes</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">data</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">hostPath</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#7ee787">path</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">/storage/minio</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Create the StatefulSet.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f minio-dist-statefulset.yaml
+</span></span></code></pre></div><h1 id="expose-service-using-ingress">Expose Service using Ingress</h1>
 <p>Now that a MinIO StatefulSet running, user may either want to access it internally (within the cluster) or expose it as a Service onto an external (outside of the cluster, maybe public internet) IP address, depending on the use case. This can be achieved using Services.</p>
-
 <p>There are many service types - default type is ClusterIP, which exposes a service to connection from inside the cluster. NodePort and LoadBalancer are two types that expose services to external traffic. At here, We will use <a href="https://traefik.io/">Traefik Ingress</a> to expose the service.</p>
-
 <p>This is the service description.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">traefik.containo.us/v1alpha1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">IngressRoute</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio-router</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">entryPoints</span>:
-    - <span style="color:#ae81ff">web</span>
-  <span style="color:#f92672">routes</span>:
-    - <span style="color:#f92672">match</span>: <span style="color:#ae81ff">Host(`minio.idocker.io`)</span>
-      <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Rule</span>
-      <span style="color:#f92672">services</span>:
-        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-          <span style="color:#f92672">port</span>: <span style="color:#ae81ff">9000</span>
-    - <span style="color:#f92672">match</span>: <span style="color:#ae81ff">Host(`console.minio.idocker.io`)</span>
-      <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Rule</span>
-      <span style="color:#f92672">services</span>:
-        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
-          <span style="color:#f92672">port</span>: <span style="color:#ae81ff">9001</span></code></pre></div>
-<p>Create the IngressRoute</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f ingress-router.yaml</code></pre></div>
-<h1 id="access-minio">Access Minio</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">apiVersion</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">traefik.containo.us/v1alpha1</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">kind</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">IngressRoute</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">metadata</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio-router</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">spec</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">entryPoints</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#a5d6ff">web</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">routes</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#7ee787">match</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Host(`minio.idocker.io`)</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">kind</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Rule</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">services</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">port</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9000</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#7ee787">match</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Host(`console.minio.idocker.io`)</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">kind</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">Rule</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">services</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>- <span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">minio</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">port</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">9001</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Create the IngressRoute</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f ingress-router.yaml
+</span></span></code></pre></div><h1 id="access-minio">Access Minio</h1>
 <p>Use the following URL to access MinIO: <code>http://console.minio.idocker.io</code></p>
-
 <h1 id="reference">Reference</h1>
-
 <ul>
 <li><a href="https://github.com/lushenle/k8s-manifests/tree/master/minio">https://github.com/lushenle/k8s-manifests/tree/master/minio</a></li>
 <li><a href="https://github.com/minio/minio/issues/12793">https://github.com/minio/minio/issues/12793</a></li>
@@ -627,7 +600,7 @@ if (!doNotTrack) {
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 Shenle Lu. All Rights Reserved
+    &copy; 2023 Shenle Lu. All Rights Reserved
   </span>
 </footer>
 
@@ -743,7 +716,7 @@ if (!doNotTrack) {
     
     <h4 id="about-card-name">Shenle Lu</h4>
     
-      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
     
     
       <div id="about-card-job">

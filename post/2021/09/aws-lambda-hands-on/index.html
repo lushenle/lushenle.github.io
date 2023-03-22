@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="Serverless, Lambda">
 <meta name="description" content="">
@@ -154,7 +154,7 @@ if (!doNotTrack) {
         </a>
         <h4 class="sidebar-profile-name">Shenle Lu</h4>
         
-          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
         
       </div>
     
@@ -324,209 +324,173 @@ if (!doNotTrack) {
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1>
 <nav id="TableOfContents">
-<ul>
-<li><a href="#advantages-of-go-golang-for-aws-lambda">Advantages of Go (Golang) for AWS Lambda</a>
-<ul>
-<li><a href="#runtime-versioning">Runtime Versioning</a></li>
-<li><a href="#cold-starts">Cold Starts</a></li>
-<li><a href="#pricing">Pricing</a></li>
-</ul></li>
-<li><a href="#getting-started-with-aws-lambda-and-go-golang">Getting Started with AWS Lambda and Go (Golang)</a>
-<ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#the-lambda-fib-function">The Lambda-Fib Function</a></li>
-<li><a href="#the-handler-function">The Handler Function</a></li>
-<li><a href="#deployment">Deployment</a></li>
-<li><a href="#improving-your-service">Improving Your Service</a></li>
-</ul></li>
-<li><a href="#summary">Summary</a></li>
-</ul>
+  <ul>
+    <li><a href="#runtime-versioning">Runtime Versioning</a></li>
+    <li><a href="#cold-starts">Cold Starts</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#the-lambda-fib-function">The Lambda-Fib Function</a></li>
+    <li><a href="#the-handler-function">The Handler Function</a></li>
+    <li><a href="#deployment">Deployment</a></li>
+    <li><a href="#improving-your-service">Improving Your Service</a></li>
+  </ul>
 </nav>
 
-
 <p>AWS – a pioneer and de facto leader in serverless computing – had already added Go as a supported runtime to AWS Lambda back at the beginning of 2018.</p>
-
 <h1 id="advantages-of-go-golang-for-aws-lambda">Advantages of Go (Golang) for AWS Lambda</h1>
-
 <p>While all Lambda runtimes offer the same advantages in terms of scalability and share many concepts, there are some notable advantages when you use Go: Runtime versioning scheme, cold start performance, and pricing.</p>
-
 <h2 id="runtime-versioning">Runtime Versioning</h2>
-
 <p>The Go runtime for AWS Lambda has a very significant difference from every other runtime available today. While other runtimes support only specific versions of a language (for example, Python 2.7, 3.6, and 3.7 are three separate runtimes), the Go runtime supports any 1.x release, which already spans over seven years of releases.</p>
-
 <p>Whenever a new version of Go is released, it’s possible to use it from day one, without having to wait for AWS to release a newly updated runtime. Such a feature would not be possible were Go not a statically compiled language with its Go 1 compatibility guarantee.</p>
-
 <h2 id="cold-starts">Cold Starts</h2>
-
 <p>When a Lambda function hasn’t had an invocation for a while, or when a spike in traffic requires additional functions to spawn, there’s a small penalty associated with it – the often dreaded cold start. Fortunately, Go has one of the fastest cold start times. You can read more on how to minimize AWS Lambda cold starts here.</p>
-
 <h2 id="pricing">Pricing</h2>
-
 <p>The pricing model of AWS Lambda is per invocation, plus the duration of the invocation rounded up to the nearest 100ms. The price per 100ms also depends on the amount of memory allocated to the function.</p>
-
 <p>While Go isn’t necessarily as memory-hungry as some dynamic languages, there is a small catch: a direct correlation between the CPU performance and allocated memory. While Go might also squeeze more performance out of a throttled CPU than some other languages, this remains an important point to consider.</p>
-
 <p>With all this in mind, you can rest assured that Go is an excellent choice for AWS Lambda: A performant, cost-efficient language with the bonus of being able to run the latest (or even prerelease) version of the Go language without waiting for AWS to update their runtimes.</p>
-
 <h1 id="getting-started-with-aws-lambda-and-go-golang">Getting Started with AWS Lambda and Go (Golang)</h1>
-
 <p>So, let’s get some coding done. You are going to create an HTTP triggered AWS Lambda function that responds with JSON. We’ll start by returning a response that contains the 1,000th of the Fibonacci number and then improve it to returning a random Fibonacci number.</p>
-
 <p>Before we can start, however, there are a few prerequisites we must fulfill.</p>
-
 <h2 id="prerequisites">Prerequisites</h2>
-
 <p>You’ll need an AWS account for this. If you don’t yet have one, <a href="https://aws.amazon.com/free">sign up for a free account here</a>. The AWS free tier includes one million invocations every month and enough credit to run a single 128MB function continuously, all at no charge.</p>
-
 <p>For building and deploying your functions, you’ll be using the Serverless Framework, which is the most widely used tool for the job. Assuming you have a recent version of Node.js installed, you can install the Serverless CLI with the following npm command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">npm install -g serverless</code></pre></div>
-<p>Once you have the Serverless CLI installed, you must configure it to use the AWS access keys of your account:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">serverless config credentials --provider aws --key &lt;access key ID&gt; --secret &lt;secret access key&gt;</code></pre></div>
-<p>If you don’t have Go and nodejs installed yet, use brew install them:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">brew install go nodejs</code></pre></div>
-<h2 id="the-lambda-fib-function">The Lambda-Fib Function</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npm install -g serverless
+</span></span></code></pre></div><p>Once you have the Serverless CLI installed, you must configure it to use the AWS access keys of your account:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>serverless config credentials --provider aws --key &lt;access key ID&gt; --secret &lt;secret access key&gt;
+</span></span></code></pre></div><p>If you don’t have Go and nodejs installed yet, use brew install them:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew install go nodejs
+</span></span></code></pre></div><h2 id="the-lambda-fib-function">The Lambda-Fib Function</h2>
 <p>Now that you have everything you need, let’s create a new project using Go modules for your function. For example, let’s name the module lambda-fib. In a new, empty directory, initialize the Go module, and install the <a href="https://github.com/aws/aws-lambda-go">AWS Lambda for Go</a> library:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go mod init lambda-fib
-go get github.com/aws/aws-lambda-go</code></pre></div>
-<p>After this, you can proceed to create a main.go file that implements your handler function and starts the process:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;context&#34;</span>
-	<span style="color:#e6db74">&#34;encoding/json&#34;</span>
-	<span style="color:#e6db74">&#34;math/big&#34;</span>
-
-	<span style="color:#e6db74">&#34;github.com/aws/aws-lambda-go/events&#34;</span>
-	<span style="color:#e6db74">&#34;github.com/aws/aws-lambda-go/lambda&#34;</span>
-)
-
-<span style="color:#75715e">// fibonacciBig calculates Fibonacci number using bit.Int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">fibonacciBig</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">uint</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">big</span>.<span style="color:#a6e22e">Int</span> {
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">big</span>.<span style="color:#a6e22e">NewInt</span>(int64(<span style="color:#a6e22e">n</span>))
-	}
-
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">n2</span>, <span style="color:#a6e22e">n1</span> = <span style="color:#a6e22e">big</span>.<span style="color:#a6e22e">NewInt</span>(<span style="color:#ae81ff">0</span>), <span style="color:#a6e22e">big</span>.<span style="color:#a6e22e">NewInt</span>(<span style="color:#ae81ff">1</span>)
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> uint(<span style="color:#ae81ff">1</span>); <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">n2</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">n2</span>, <span style="color:#a6e22e">n1</span>)
-		<span style="color:#a6e22e">n1</span>, <span style="color:#a6e22e">n2</span> = <span style="color:#a6e22e">n2</span>, <span style="color:#a6e22e">n1</span>
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n1</span>
-}
-
-<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">response</span> <span style="color:#66d9ef">struct</span> {
-	<span style="color:#a6e22e">FibonacciNum1000</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">big</span>.<span style="color:#a6e22e">Int</span> <span style="color:#e6db74">`json:&#34;fibonacci_num_1000&#34;`</span>
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">handleRequest</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">APIGatewayProxyRequest</span>) (<span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">APIGatewayProxyResponse</span>, <span style="color:#66d9ef">error</span>) {
-	<span style="color:#a6e22e">resp</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">response</span>{
-		<span style="color:#a6e22e">FibonacciNum1000</span>: <span style="color:#a6e22e">fibonacciBig</span>(<span style="color:#ae81ff">1000</span>),
-	}
-
-	<span style="color:#a6e22e">body</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Marshal</span>(<span style="color:#a6e22e">resp</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">APIGatewayProxyResponse</span>{}, <span style="color:#a6e22e">err</span>
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">APIGatewayProxyResponse</span>{<span style="color:#a6e22e">Body</span>: string(<span style="color:#a6e22e">body</span>), <span style="color:#a6e22e">StatusCode</span>: <span style="color:#ae81ff">200</span>}, <span style="color:#66d9ef">nil</span>
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">lambda</span>.<span style="color:#a6e22e">Start</span>(<span style="color:#a6e22e">handleRequest</span>)
-}</code></pre></div>
-<p>This previous code can be broken into a few simple steps:</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go mod init lambda-fib
+</span></span><span style="display:flex;"><span>go get github.com/aws/aws-lambda-go
+</span></span></code></pre></div><p>After this, you can proceed to create a main.go file that implements your handler function and starts the process:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#a5d6ff">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a5d6ff">&#34;encoding/json&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a5d6ff">&#34;math/big&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a5d6ff">&#34;github.com/aws/aws-lambda-go/events&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a5d6ff">&#34;github.com/aws/aws-lambda-go/lambda&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// fibonacciBig calculates Fibonacci number using bit.Int
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">fibonacciBig</span>(n <span style="color:#ff7b72">uint</span>) <span style="color:#ff7b72;font-weight:bold">*</span>big.Int {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> n <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> big.<span style="color:#d2a8ff;font-weight:bold">NewInt</span>(int64(n))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> n2, n1 = big.<span style="color:#d2a8ff;font-weight:bold">NewInt</span>(<span style="color:#a5d6ff">0</span>), big.<span style="color:#d2a8ff;font-weight:bold">NewInt</span>(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> uint(<span style="color:#a5d6ff">1</span>); i &lt; n; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		n2.<span style="color:#d2a8ff;font-weight:bold">Add</span>(n2, n1)
+</span></span><span style="display:flex;"><span>		n1, n2 = n2, n1
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> n1
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">type</span> response <span style="color:#ff7b72">struct</span> {
+</span></span><span style="display:flex;"><span>	FibonacciNum1000 <span style="color:#ff7b72;font-weight:bold">*</span>big.Int <span style="color:#a5d6ff">`json:&#34;fibonacci_num_1000&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">handleRequest</span>(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, <span style="color:#ff7b72">error</span>) {
+</span></span><span style="display:flex;"><span>	resp <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>response{
+</span></span><span style="display:flex;"><span>		FibonacciNum1000: <span style="color:#d2a8ff;font-weight:bold">fibonacciBig</span>(<span style="color:#a5d6ff">1000</span>),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	body, err <span style="color:#ff7b72;font-weight:bold">:=</span> json.<span style="color:#d2a8ff;font-weight:bold">Marshal</span>(resp)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> err <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#79c0ff">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> events.APIGatewayProxyResponse{}, err
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> events.APIGatewayProxyResponse{Body: string(body), StatusCode: <span style="color:#a5d6ff">200</span>}, <span style="color:#79c0ff">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>	lambda.<span style="color:#d2a8ff;font-weight:bold">Start</span>(handleRequest)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This previous code can be broken into a few simple steps:</p>
 <ul>
 <li>Define a High-Performance function for computing Fibonacci number.</li>
 <li>Define a response struct that supports JSON serialization and defines the HTTP response body of a successful invocation of your AWS Lambda function.</li>
 <li>Create a request handler function, which creates a response struct containing the 1,000th of the Fibonacci number and then proceeds to serialize it as JSON. In case the serialization fails, you return the error; if everything goes well, you respond with your serialized JSON as the response body and a status code of 200.</li>
 <li>Register your handler function in the main function using the AWS Lambda for Go library.</li>
 </ul>
-
 <h2 id="the-handler-function">The Handler Function</h2>
-
 <p>It’s worth taking some time to understand how the handler function works. While there are multiple valid handler signatures, the one you used is the complete one. The context argument provides information on the invoked function, its environment, and also the deadline of the invocation. Returning an error value from the handler function signals that the invocation failed and automatically logs the value of the error.</p>
-
 <p>That leaves the request and response structs in your handler function signature. Lambda functions are invoked either by AWS services or by using an AWS SDK (e.g., from another Lambda function). Data passed in and out of a Lambda function is in JSON format. In your case, the AWS Lambda for Go library automatically handles the serialization and deserialization between JSON and Go values.</p>
-
 <p>When calling Lambda functions using the AWS SDK, the structure of the input and output JSON data is up to the developer. For AWS Lambda functions invoked by AWS services, the data structure depends on the invoking service. Amazon API Gateway is the service that triggers Lambda functions in response to HTTP calls. For API Gateway, this means the request is always of type events.APIGatewayProxyRequest and the response will always be of type events.APIGatewayProxyResponse.</p>
-
 <p>The AWS Lambda for Go library contains the data definitions for each AWS service that can invoke Lambda functions.</p>
-
 <h2 id="deployment">Deployment</h2>
-
 <p>Your function is now ready and you can proceed by deploying it with the Serverless Framework. For that, we must first create a serverless.yml file that defines what we are deploying:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#f92672">service</span>: <span style="color:#ae81ff">lambda-fibonacci</span>
-<span style="color:#f92672">provider</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">aws</span>
-  <span style="color:#f92672">runtime</span>: <span style="color:#ae81ff">go1.x</span>
-  <span style="color:#f92672">region</span>: <span style="color:#ae81ff">ap-northeast-2</span>
-  <span style="color:#f92672">stage</span>: <span style="color:#ae81ff">dev</span>
-<span style="color:#f92672">package</span>:
- <span style="color:#f92672">exclude</span>:
-   - <span style="color:#ae81ff">./**</span>
- <span style="color:#f92672">include</span>:
-   - <span style="color:#ae81ff">./bin/**</span>
-<span style="color:#f92672">functions</span>:
-  <span style="color:#f92672">lambda-fib</span>:
-    <span style="color:#f92672">handler</span>: <span style="color:#ae81ff">bin/lambda-fib</span>
-    <span style="color:#f92672">events</span>:
-      - <span style="color:#f92672">http</span>:
-          <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
-          <span style="color:#f92672">method</span>: <span style="color:#ae81ff">get</span></code></pre></div>
-<p>Here you name both your service and function lambda-fib, but a service could instead contain multiple functions with different names. You also need to configure your API Gateway by specifying that the function responds to HTTP events of a particular HTTP method and at a given request path.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">service</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">lambda-fibonacci</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">provider</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">aws</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">runtime</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">go1.x</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">region</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">ap-northeast-2</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">stage</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">dev</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">package</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"> </span><span style="color:#7ee787">exclude</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">   </span>- <span style="color:#a5d6ff">./**</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"> </span><span style="color:#7ee787">include</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">   </span>- <span style="color:#a5d6ff">./bin/**</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">functions</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">lambda-fib</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">handler</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">bin/lambda-fib</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">events</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#7ee787">http</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">path</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">/</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">          </span><span style="color:#7ee787">method</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">get</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Here you name both your service and function lambda-fib, but a service could instead contain multiple functions with different names. You also need to configure your API Gateway by specifying that the function responds to HTTP events of a particular HTTP method and at a given request path.</p>
 <p>Next up, build the code as an x86-64 Linux executable, and deploy it. Create a <strong>Makefile</strong>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#960050;background-color:#1e0010">ifneq</span> <span style="color:#960050;background-color:#1e0010">(,)</span>
-<span style="color:#960050;background-color:#1e0010">.error</span> <span style="color:#960050;background-color:#1e0010">This</span> <span style="color:#960050;background-color:#1e0010">Makefile</span> <span style="color:#960050;background-color:#1e0010">requires</span> <span style="color:#960050;background-color:#1e0010">GNU</span> <span style="color:#960050;background-color:#1e0010">Make.</span>
-<span style="color:#960050;background-color:#1e0010">endif</span>
-
-<span style="color:#a6e22e">.PHONY</span><span style="color:#f92672">:</span> all app deploy update clean
-
-GO       <span style="color:#f92672">:=</span> go
-BUILD    <span style="color:#f92672">:=</span> GO111MODULE<span style="color:#f92672">=</span>on CGO_ENABLED<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>amd64
-FLAGS    <span style="color:#f92672">:=</span> -installsuffix cgo -ldflags<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-s -w&#34;</span>
-
-<span style="color:#a6e22e">all</span><span style="color:#f92672">:</span> app deploy
-
-<span style="color:#a6e22e">app</span><span style="color:#f92672">:</span>
-	<span style="color:#66d9ef">$(</span>BUILD<span style="color:#66d9ef">)</span> <span style="color:#66d9ef">$(</span>GO<span style="color:#66d9ef">)</span> build -o bin/lambda-fib <span style="color:#66d9ef">$(</span>FLAGS<span style="color:#66d9ef">)</span> main.go
-
-<span style="color:#a6e22e">deploy</span><span style="color:#f92672">:</span>
-	serverless deploy
-
-<span style="color:#a6e22e">update</span><span style="color:#f92672">:</span>
-	<span style="color:#66d9ef">$(</span>GO<span style="color:#66d9ef">)</span> get -u -v ./...
-
-<span style="color:#a6e22e">clean</span><span style="color:#f92672">:</span>
-	rm -f bin/lambda-fib
-</code></pre></div>
-<p>Deploy it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make</code></pre></div>
-<p>Once finished, the command prints the URL for the endpoint. Use <code>curl</code> request it, and make sure it responds with the 1,000th of the Fibonacci number.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-makefile" data-lang="makefile"><span style="display:flex;"><span><span style="color:#f85149">ifneq</span> <span style="color:#f85149">(,)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f85149">.error</span> <span style="color:#f85149">This</span> <span style="color:#f85149">Makefile</span> <span style="color:#f85149">requires</span> <span style="color:#f85149">GNU</span> <span style="color:#f85149">Make.</span>
+</span></span><span style="display:flex;"><span><span style="color:#f85149">endif</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">.PHONY</span><span style="color:#ff7b72;font-weight:bold">:</span> all app deploy update clean
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">GO</span>       <span style="color:#ff7b72;font-weight:bold">:=</span> go
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">BUILD</span>    <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#79c0ff">GO111MODULE</span><span style="color:#ff7b72;font-weight:bold">=</span>on <span style="color:#79c0ff">CGO_ENABLED</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span> <span style="color:#79c0ff">GOOS</span><span style="color:#ff7b72;font-weight:bold">=</span>linux <span style="color:#79c0ff">GOARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>amd64
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">FLAGS</span>    <span style="color:#ff7b72;font-weight:bold">:=</span> -installsuffix cgo -ldflags<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;-s -w&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">all</span><span style="color:#ff7b72;font-weight:bold">:</span> app deploy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">app</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">$(</span>BUILD<span style="color:#ff7b72">)</span> <span style="color:#ff7b72">$(</span>GO<span style="color:#ff7b72">)</span> build -o bin/lambda-fib <span style="color:#ff7b72">$(</span>FLAGS<span style="color:#ff7b72">)</span> main.go
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">deploy</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	serverless deploy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">update</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">$(</span>GO<span style="color:#ff7b72">)</span> get -u -v ./...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">clean</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	rm -f bin/lambda-fib
+</span></span></code></pre></div><p>Deploy it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make
+</span></span></code></pre></div><p>Once finished, the command prints the URL for the endpoint. Use <code>curl</code> request it, and make sure it responds with the 1,000th of the Fibonacci number.</p>
 <h2 id="improving-your-service">Improving Your Service</h2>
-
 <p>Now that you have a working service, you can improve it by also returning the a random Fibonacci number between 1 and 1000 of the requester. To do so, add an the <code>randomInt</code> function and useing it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">...</span>
-<span style="color:#75715e">// randomInt generates a random integer between min and max
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">randomInt</span>(<span style="color:#a6e22e">min</span>, <span style="color:#a6e22e">max</span> <span style="color:#66d9ef">int64</span>) <span style="color:#66d9ef">uint</span> {
-	<span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Seed</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">UnixNano</span>())
-	<span style="color:#66d9ef">return</span> uint(<span style="color:#a6e22e">min</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Int63n</span>(<span style="color:#a6e22e">max</span><span style="color:#f92672">-</span><span style="color:#a6e22e">min</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
-}
-<span style="color:#f92672">...</span>
-	<span style="color:#a6e22e">resp</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">response</span>{
-		<span style="color:#a6e22e">FibonacciNum1000</span>: <span style="color:#a6e22e">fibonacciBig</span>(<span style="color:#a6e22e">randomInt</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)),
-	}
-<span style="color:#f92672">...</span></code></pre></div>
-<p>By rebuilding and redeploying the Lambda function, you can now see the returning is random Fibonacci number:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make</code></pre></div>
-<h1 id="summary">Summary</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// randomInt generates a random integer between min and max
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">randomInt</span>(min, max <span style="color:#ff7b72">int64</span>) <span style="color:#ff7b72">uint</span> {
+</span></span><span style="display:flex;"><span>	rand.<span style="color:#d2a8ff;font-weight:bold">Seed</span>(time.<span style="color:#d2a8ff;font-weight:bold">Now</span>().<span style="color:#d2a8ff;font-weight:bold">UnixNano</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> uint(min <span style="color:#ff7b72;font-weight:bold">+</span> rand.<span style="color:#d2a8ff;font-weight:bold">Int63n</span>(max<span style="color:#ff7b72;font-weight:bold">-</span>min<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>	resp <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>response{
+</span></span><span style="display:flex;"><span>		FibonacciNum1000: <span style="color:#d2a8ff;font-weight:bold">fibonacciBig</span>(<span style="color:#d2a8ff;font-weight:bold">randomInt</span>(<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1000</span>)),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span></code></pre></div><p>By rebuilding and redeploying the Lambda function, you can now see the returning is random Fibonacci number:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make
+</span></span></code></pre></div><h1 id="summary">Summary</h1>
 <p>In this post, we’ve looked at some of the advantages of using Go for writing AWS Lambda functions. We saw what it takes to set up an environment to develop, build, and deploy functions with the Serverless Framework. We then proceeded to create and deploy a Lambda function behind an API Gateway that showcased a real-world usage scenario of calling third-party APIs.</p>
               
 
@@ -650,7 +614,7 @@ FLAGS    <span style="color:#f92672">:=</span> -installsuffix cgo -ldflags<span 
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 Shenle Lu. All Rights Reserved
+    &copy; 2023 Shenle Lu. All Rights Reserved
   </span>
 </footer>
 
@@ -766,7 +730,7 @@ FLAGS    <span style="color:#f92672">:=</span> -installsuffix cgo -ldflags<span 
     
     <h4 id="about-card-name">Shenle Lu</h4>
     
-      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
     
     
       <div id="about-card-job">

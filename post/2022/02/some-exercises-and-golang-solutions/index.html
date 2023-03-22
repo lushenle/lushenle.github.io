@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="Golang, Data-Structure, Algorithm">
 <meta name="description" content="This is my recent study notes, some of common problems in the interview, and gives the solution ideas and methods, as well as Go code implementation.">
@@ -157,7 +157,7 @@ if (!doNotTrack) {
         </a>
         <h4 class="sidebar-profile-name">Shenle Lu</h4>
         
-          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</h5>
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
         
       </div>
     
@@ -328,530 +328,456 @@ if (!doNotTrack) {
           <div class="post-content markdown">
             <div class="main-content-wrap">
               <p>This is my recent study notes, some of common problems in the interview, and gives the solution ideas and methods, as well as Go code implementation.</p>
-
 <h1 id="table-of-contents">Table of Contents</h1>
 <nav id="TableOfContents">
-<ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#problems">Problems</a>
-<ul>
-<li><a href="#find-average-of-all-the-elements-in-a-list">Find average of all the elements in a list</a></li>
-<li><a href="#find-the-sum-of-all-the-elements-of-a-two-dimensional-list">Find the sum of all the elements of a two-dimensional list</a></li>
-<li><a href="#find-the-largest-element-in-the-list">Find the largest element in the list</a></li>
-<li><a href="#find-the-smallest-element-in-the-list">Find the smallest element in the list</a></li>
-<li><a href="#find-the-second-largest-element-in-the-list">Find the second-largest element in the list</a></li>
-<li><a href="#generate-allpermutation">Generate AllPermutation</a></li>
-<li><a href="#write-a-method-to-compute-sum-n-1-2-3-n">Write a method to compute Sum(N)=1+2+3+&hellip;+N</a></li>
-<li><a href="#print-all-the-maxima-s-in-a-list">Print all the maxima’s in a list</a></li>
-<li><a href="#given-a-list-of-intervals-merge-all-overlapping-intervals">Given a list of intervals, merge all overlapping intervals</a></li>
-<li><a href="#reverse-a-list-in-place">Reverse a list in-place</a></li>
-<li><a href="#given-a-list-of-0s-and-1s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s">Given a list of 0s and 1s. We need to sort it so that all the 0s are before all the 1s</a></li>
-<li><a href="#given-an-array-of-0s-1s-and-2s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s-and-all-the-1s-are-before-2s">Given an array of 0s, 1s and 2s. We need to sort it so that all the 0s are before all the 1s and all the 1s are before 2s</a></li>
-<li><a href="#find-the-duplicate-elements-in-a-list-of-size-n-where-each-element-is-in-the-range-0-to-n-1">Find the duplicate elements in a list of size n where each element is in the range 0 to n-1</a></li>
-<li><a href="#find-the-maximum-element-in-a-sorted-and-rotated-list">Find the maximum element in a sorted and rotated list</a></li>
-<li><a href="#given-a-slice-with-n-elements-a-value-x-find-two-elements-in-the-list-that-sums-to-x">Given a slice with &lsquo;n&rsquo; elements &amp; a value &lsquo;x&rsquo;, find two elements in the list that sums to &lsquo;x&rsquo;</a></li>
-<li><a href="#write-a-method-to-find-the-sum-of-every-number-in-an-int-number">Write a method to find the sum of every number in an int number</a></li>
-</ul></li>
-<li><a href="#conclusion">Conclusion</a></li>
-<li><a href="#reference">Reference</a></li>
-</ul>
+  <ul>
+    <li><a href="#find-average-of-all-the-elements-in-a-list">Find average of all the elements in a list</a></li>
+    <li><a href="#find-the-sum-of-all-the-elements-of-a-two-dimensional-list">Find the sum of all the elements of a two-dimensional list</a></li>
+    <li><a href="#find-the-largest-element-in-the-list">Find the largest element in the list</a></li>
+    <li><a href="#find-the-smallest-element-in-the-list">Find the smallest element in the list</a></li>
+    <li><a href="#find-the-second-largest-element-in-the-list">Find the second-largest element in the list</a></li>
+    <li><a href="#generate-allpermutation">Generate AllPermutation</a></li>
+    <li><a href="#write-a-method-to-compute-sumn123n">Write a method to compute Sum(N)=1+2+3+&hellip;+N</a></li>
+    <li><a href="#print-all-the-maximas-in-a-list">Print all the maxima’s in a list</a></li>
+    <li><a href="#given-a-list-of-intervals-merge-all-overlapping-intervals">Given a list of intervals, merge all overlapping intervals</a></li>
+    <li><a href="#reverse-a-list-in-place">Reverse a list in-place</a></li>
+    <li><a href="#given-a-list-of-0s-and-1s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s">Given a list of 0s and 1s. We need to sort it so that all the 0s are before all the 1s</a></li>
+    <li><a href="#given-an-array-of-0s-1s-and-2s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s-and-all-the-1s-are-before-2s">Given an array of 0s, 1s and 2s. We need to sort it so that all the 0s are before all the 1s and all the 1s are before 2s</a></li>
+    <li><a href="#find-the-duplicate-elements-in-a-list-of-size-n-where-each-element-is-in-the-range-0-to-n-1">Find the duplicate elements in a list of size n where each element is in the range 0 to n-1</a></li>
+    <li><a href="#find-the-maximum-element-in-a-sorted-and-rotated-list">Find the maximum element in a sorted and rotated list</a></li>
+    <li><a href="#given-a-slice-with-n-elements--a-value-x-find-two-elements-in-the-list-that-sums-to-x">Given a slice with &rsquo;n&rsquo; elements &amp; a value &lsquo;x&rsquo;, find two elements in the list that sums to &lsquo;x&rsquo;</a></li>
+    <li><a href="#write-a-method-to-find-the-sum-of-every-number-in-an-int-number">Write a method to find the sum of every number in an int number</a></li>
+  </ul>
 </nav>
 
-
 <h1 id="introduction">Introduction</h1>
-
 <p>Due to the limited level, the solution ideas and methods, as well as the code implementation, are only what I can get to at the moment. If you have better methods and ideas, please leave me a message in the comment section.</p>
-
 <h1 id="problems">Problems</h1>
-
 <h2 id="find-average-of-all-the-elements-in-a-list">Find average of all the elements in a list</h2>
-
 <p>Arithmetic mean, There doesn&rsquo;t seem to be a better algorithm for this problem, so let&rsquo;s just sum and return the mean.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Average Find average of all the elements in a list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Average</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
-	<span style="color:#a6e22e">sum</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">sum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">n</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Average Find average of all the elements in a list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Average</span>(nums []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	n <span style="color:#ff7b72;font-weight:bold">:=</span> len(nums)
+</span></span><span style="display:flex;"><span>	sum <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; n; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		sum <span style="color:#ff7b72;font-weight:bold">+=</span> nums[i]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> sum <span style="color:#ff7b72;font-weight:bold">/</span> n
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-sum-of-all-the-elements-of-a-two-dimensional-list">Find the sum of all the elements of a two-dimensional list</h2>
-
 <p>Similar to the previous question, there seems to be no direct way but to variable all the elements and return their sum.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// SumOfMatrixElement Find the sum of all the elements of a two-dimensional list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SumOfMatrixElement</span>(<span style="color:#a6e22e">nums</span> [][]<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">length</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sum</span> <span style="color:#66d9ef">int</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">j</span> &lt; len(<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]); <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
-			<span style="color:#a6e22e">sum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>][<span style="color:#a6e22e">j</span>]
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sum</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// SumOfMatrixElement Find the sum of all the elements of a two-dimensional list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SumOfMatrixElement</span>(nums [][]<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	length <span style="color:#ff7b72;font-weight:bold">:=</span> len(nums)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> sum <span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; length; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">for</span> j <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; j &lt; len(nums[i]); j<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>			sum <span style="color:#ff7b72;font-weight:bold">+=</span> nums[i][j]
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> sum
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n*m)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-largest-element-in-the-list">Find the largest element in the list</h2>
-
 <p>The solution is to initialize max as first element, then traverse the given array from second element till end. For every traversed element, compare it with max, if it is greater than max, then update max.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// MaxElement Find the largest element in the list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MaxElement</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">max</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">MinInt</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">max</span> &lt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] {
-			<span style="color:#a6e22e">max</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">max</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// MaxElement Find the largest element in the list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">MaxElement</span>(nums []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	max <span style="color:#ff7b72;font-weight:bold">:=</span> math.MinInt
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; len(nums); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> max &lt; nums[i] {
+</span></span><span style="display:flex;"><span>			max = nums[i]
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> max
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-smallest-element-in-the-list">Find the smallest element in the list</h2>
-
 <p>Similar to the previous question, but the final value returned is the minimum value.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// SmallestElement Find the largest element in the list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SmallestElement</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">min</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">MaxInt</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">min</span> &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] {
-			<span style="color:#a6e22e">min</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">min</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// SmallestElement Find the largest element in the list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SmallestElement</span>(nums []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	min <span style="color:#ff7b72;font-weight:bold">:=</span> math.MaxInt
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; len(nums); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> min &gt; nums[i] {
+</span></span><span style="display:flex;"><span>			min = nums[i]
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> min
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-second-largest-element-in-the-list">Find the second-largest element in the list</h2>
-
 <p>Find the second-largest element in a single traversal. Below is the complete algorithm for doing this:</p>
-
 <ul>
 <li>Initialize the first as <code>nums[0]</code>, second as <code>nums[1]</code> element, if <code>nums[0]</code> grater than <code>nums[1]</code>, else exchanges</li>
 <li>Start traversing the array from <code>nums[2]</code>,
-
 <ul>
 <li>If the current element in array say <code>nums[i]</code> is greater than first. Then update first and second as <code>second = first</code>, <code>first = nums[i]</code></li>
 <li>If the current element is in between first and second, then update second to store the value of current variable as <code>second = nums[i]</code></li>
-</ul></li>
+</ul>
+</li>
 <li>Return the value stored in second</li>
 </ul>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// SecondMax Find the second-largest number in the list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SecondMax</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">first</span>, <span style="color:#a6e22e">second</span> <span style="color:#66d9ef">int</span>
-
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>] &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">1</span>] {
-		<span style="color:#a6e22e">first</span>, <span style="color:#a6e22e">second</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">1</span>]
-	} <span style="color:#66d9ef">else</span> {
-		<span style="color:#a6e22e">first</span>, <span style="color:#a6e22e">second</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">1</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>]
-	}
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] &gt; <span style="color:#a6e22e">first</span> {
-			<span style="color:#a6e22e">second</span> = <span style="color:#a6e22e">first</span>
-			<span style="color:#a6e22e">first</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]
-		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] &gt; <span style="color:#a6e22e">second</span> {
-			<span style="color:#a6e22e">second</span> = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>]
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">second</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// SecondMax Find the second-largest number in the list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SecondMax</span>(nums []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> first, second <span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> nums[<span style="color:#a5d6ff">0</span>] &gt; nums[<span style="color:#a5d6ff">1</span>] {
+</span></span><span style="display:flex;"><span>		first, second = nums[<span style="color:#a5d6ff">0</span>], nums[<span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>	} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>		first, second = nums[<span style="color:#a5d6ff">1</span>], nums[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">2</span>; i &lt; len(nums); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[i] &gt; first {
+</span></span><span style="display:flex;"><span>			second = first
+</span></span><span style="display:flex;"><span>			first = nums[i]
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span> nums[i] &gt; second {
+</span></span><span style="display:flex;"><span>			second = nums[i]
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> second
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$, Only one traversal of the array is needed.</li>
 <li>Auxiliary Space: $O(1)$, As no extra space is required.</li>
 </ul>
-
 <h2 id="generate-allpermutation">Generate AllPermutation</h2>
-
 <p>Previously, a recursive <a href="https://shenle.lu/post/2022/02/recursive-algorithm-and-applications/#all-permutations-of-an-integer-list">approach</a> was discussed to generate permutation. Here, I will use a different approach to solve this problem than before. For more discussion on this problem you can follow <a href="https://leetcode.com/problems/permutations/">LeetCode-Permutations</a>, Just deep search with DFS.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Permutations All permutations of an integer list
-</span><span style="color:#75715e">// The number of permutations of n numbers is n!
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Permutations</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">nums</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
-		<span style="color:#66d9ef">return</span> [][]<span style="color:#66d9ef">int</span>{}
-	}
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">res</span> [][]<span style="color:#66d9ef">int</span>
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">int</span>
-	<span style="color:#a6e22e">used</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">bool</span>, len(<span style="color:#a6e22e">nums</span>))
-	<span style="color:#a6e22e">generatePermutation</span>(<span style="color:#a6e22e">nums</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">p</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">res</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">used</span>)
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">generatePermutation</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">index</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">res</span> <span style="color:#f92672">*</span>[][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">used</span> <span style="color:#f92672">*</span>[]<span style="color:#66d9ef">bool</span>) {
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">==</span> len(<span style="color:#a6e22e">nums</span>) {
-		<span style="color:#a6e22e">temp</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">p</span>))
-		copy(<span style="color:#a6e22e">temp</span>, <span style="color:#a6e22e">p</span>)
-		<span style="color:#f92672">*</span><span style="color:#a6e22e">res</span> = append(<span style="color:#f92672">*</span><span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">temp</span>)
-	}
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> !(<span style="color:#f92672">*</span><span style="color:#a6e22e">used</span>)[<span style="color:#a6e22e">i</span>] {
-			(<span style="color:#f92672">*</span><span style="color:#a6e22e">used</span>)[<span style="color:#a6e22e">i</span>] = <span style="color:#66d9ef">true</span>
-			<span style="color:#a6e22e">p</span> = append(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>])
-			<span style="color:#a6e22e">generatePermutation</span>(<span style="color:#a6e22e">nums</span>, <span style="color:#a6e22e">index</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">used</span>)
-			<span style="color:#a6e22e">p</span> = <span style="color:#a6e22e">p</span>[:len(<span style="color:#a6e22e">p</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
-			(<span style="color:#f92672">*</span><span style="color:#a6e22e">used</span>)[<span style="color:#a6e22e">i</span>] = <span style="color:#66d9ef">false</span>
-		}
-	}
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Permutations All permutations of an integer list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// The number of permutations of n numbers is n!
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Permutations</span>(nums []<span style="color:#ff7b72">int</span>) [][]<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> len(nums) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> [][]<span style="color:#ff7b72">int</span>{}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> res [][]<span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> p []<span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	used <span style="color:#ff7b72;font-weight:bold">:=</span> make([]<span style="color:#ff7b72">bool</span>, len(nums))
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">generatePermutation</span>(nums, <span style="color:#a5d6ff">0</span>, p, <span style="color:#ff7b72;font-weight:bold">&amp;</span>res, <span style="color:#ff7b72;font-weight:bold">&amp;</span>used)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> res
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">generatePermutation</span>(nums []<span style="color:#ff7b72">int</span>, index <span style="color:#ff7b72">int</span>, p []<span style="color:#ff7b72">int</span>, res <span style="color:#ff7b72;font-weight:bold">*</span>[][]<span style="color:#ff7b72">int</span>, used <span style="color:#ff7b72;font-weight:bold">*</span>[]<span style="color:#ff7b72">bool</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> index <span style="color:#ff7b72;font-weight:bold">==</span> len(nums) {
+</span></span><span style="display:flex;"><span>		temp <span style="color:#ff7b72;font-weight:bold">:=</span> make([]<span style="color:#ff7b72">int</span>, len(p))
+</span></span><span style="display:flex;"><span>		copy(temp, p)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72;font-weight:bold">*</span>res = append(<span style="color:#ff7b72;font-weight:bold">*</span>res, temp)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; len(nums); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> !(<span style="color:#ff7b72;font-weight:bold">*</span>used)[i] {
+</span></span><span style="display:flex;"><span>			(<span style="color:#ff7b72;font-weight:bold">*</span>used)[i] = <span style="color:#79c0ff">true</span>
+</span></span><span style="display:flex;"><span>			p = append(p, nums[i])
+</span></span><span style="display:flex;"><span>			<span style="color:#d2a8ff;font-weight:bold">generatePermutation</span>(nums, index<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>, p, res, used)
+</span></span><span style="display:flex;"><span>			p = p[:len(p)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>			(<span style="color:#ff7b72;font-weight:bold">*</span>used)[i] = <span style="color:#79c0ff">false</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n^2)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
-<h2 id="write-a-method-to-compute-sum-n-1-2-3-n">Write a method to compute Sum(N)=1+2+3+&hellip;+N</h2>
-
+<h2 id="write-a-method-to-compute-sumn123n">Write a method to compute Sum(N)=1+2+3+&hellip;+N</h2>
 <p>Gauss sum: $\dfrac{n\left(n+1\right)}{2}$, <a href="https://en.wikipedia.org/wiki/Gauss_sum">read more</a>.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SumN</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SumN</span>(n <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> n <span style="color:#ff7b72;font-weight:bold">*</span> (n <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">/</span> <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(1)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
-<h2 id="print-all-the-maxima-s-in-a-list">Print all the maxima’s in a list</h2>
-
+<h2 id="print-all-the-maximas-in-a-list">Print all the maxima’s in a list</h2>
 <p>A value is a maximum if the value before and after its index are smaller than it is or does not exist.</p>
-
 <p>Start traversing list from the end and keep track of the max element. If we encounter an element whose value is grater then max, print the element and update max.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Maxima Print all the maxima’s in a list
-</span><span style="color:#75715e">// A value is a maximum if the value before and
-</span><span style="color:#75715e">// after its index are smaller than it is or does not exist
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Maxima</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ans</span> []<span style="color:#66d9ef">int</span>
-
-	<span style="color:#a6e22e">length</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>] &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">1</span>] {
-		<span style="color:#a6e22e">ans</span> = append(<span style="color:#a6e22e">ans</span>, <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>])
-	}
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] &lt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] {
-			<span style="color:#a6e22e">ans</span> = append(<span style="color:#a6e22e">ans</span>, <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>])
-			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
-		}
-	}
-
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] {
-		<span style="color:#a6e22e">ans</span> = append(<span style="color:#a6e22e">ans</span>, <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ans</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Maxima Print all the maxima’s in a list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// A value is a maximum if the value before and
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// after its index are smaller than it is or does not exist
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Maxima</span>(nums []<span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> ans []<span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	length <span style="color:#ff7b72;font-weight:bold">:=</span> len(nums)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> nums[<span style="color:#a5d6ff">0</span>] &gt; nums[<span style="color:#a5d6ff">1</span>] {
+</span></span><span style="display:flex;"><span>		ans = append(ans, nums[<span style="color:#a5d6ff">0</span>])
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">2</span>; i &lt; length<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[i<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>] &lt; nums[i] <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> nums[i] &gt; nums[i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>] {
+</span></span><span style="display:flex;"><span>			ans = append(ans, nums[i])
+</span></span><span style="display:flex;"><span>			i<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> nums[length<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>] &gt; nums[length<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">2</span>] {
+</span></span><span style="display:flex;"><span>		ans = append(ans, nums[length<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>])
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ans
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="given-a-list-of-intervals-merge-all-overlapping-intervals">Given a list of intervals, merge all overlapping intervals</h2>
-
 <p><strong>Example:</strong></p>
-
 <ul>
-<li>Input: <code>{[1, 4], [3, 6], [8, 10]}</code></li>
-
-<li><p>Output: <code>{[1, 6], [8, 10]}</code></p></li>
-
-<li><p>Sort all intervals in increasing order of start time.</p></li>
-
-<li><p>Traverse sorted intervals starting from first interval, do following for every interval.</p>
-
+<li>
+<p>Input: <code>{[1, 4], [3, 6], [8, 10]}</code></p>
+</li>
+<li>
+<p>Output: <code>{[1, 6], [8, 10]}</code></p>
+</li>
+<li>
+<p>Sort all intervals in increasing order of start time.</p>
+</li>
+<li>
+<p>Traverse sorted intervals starting from first interval, do following for every interval.</p>
 <ul>
 <li>If current interval is not first interval, and it overlaps with previous interval, then merge it with previous interval. Keep doing it while the interval overlaps with the previous one.</li>
 <li>Else add current interval to output list of intervals.</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MergeIntervals</span>(<span style="color:#a6e22e">intervals</span> [][]<span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">intervals</span>) <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">intervals</span>
-	}
-
-	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">intervals</span>) <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">intervals</span>
-	}
-    <span style="color:#75715e">// Sorting based on the increasing order of the start intervals
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">sort</span>.<span style="color:#a6e22e">Slice</span>(<span style="color:#a6e22e">intervals</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">intervals</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">0</span>] &lt; <span style="color:#a6e22e">intervals</span>[<span style="color:#a6e22e">j</span>][<span style="color:#ae81ff">0</span>]
-	})
-
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ans</span> [][]<span style="color:#66d9ef">int</span>
-	<span style="color:#a6e22e">ans</span> = append(<span style="color:#a6e22e">ans</span>, <span style="color:#a6e22e">intervals</span>[<span style="color:#ae81ff">0</span>])
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">intervals</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">lastInterval</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ans</span>[len(<span style="color:#a6e22e">ans</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
-		<span style="color:#a6e22e">currLeft</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">intervals</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">0</span>]
-		<span style="color:#a6e22e">currRight</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">intervals</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">1</span>]
-
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">lastInterval</span>[<span style="color:#ae81ff">1</span>] &lt; <span style="color:#a6e22e">currLeft</span> {
-			<span style="color:#a6e22e">ans</span> = append(<span style="color:#a6e22e">ans</span>, <span style="color:#a6e22e">intervals</span>[<span style="color:#a6e22e">i</span>])
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">lastInterval</span>[<span style="color:#ae81ff">1</span>] = <span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">lastInterval</span>[<span style="color:#ae81ff">1</span>], <span style="color:#a6e22e">currRight</span>)
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ans</span>
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> &gt; <span style="color:#a6e22e">b</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span>
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">b</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">MergeIntervals</span>(intervals [][]<span style="color:#ff7b72">int</span>) [][]<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> len(intervals) <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> intervals
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> len(intervals) <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> intervals
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Sorting based on the increasing order of the start intervals
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	sort.<span style="color:#d2a8ff;font-weight:bold">Slice</span>(intervals, <span style="color:#ff7b72">func</span>(i, j <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">bool</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> intervals[i][<span style="color:#a5d6ff">0</span>] &lt; intervals[j][<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> ans [][]<span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	ans = append(ans, intervals[<span style="color:#a5d6ff">0</span>])
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">1</span>; i &lt; len(intervals); i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		lastInterval <span style="color:#ff7b72;font-weight:bold">:=</span> ans[len(ans)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>		currLeft <span style="color:#ff7b72;font-weight:bold">:=</span> intervals[i][<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>		currRight <span style="color:#ff7b72;font-weight:bold">:=</span> intervals[i][<span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> lastInterval[<span style="color:#a5d6ff">1</span>] &lt; currLeft {
+</span></span><span style="display:flex;"><span>			ans = append(ans, intervals[i])
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			lastInterval[<span style="color:#a5d6ff">1</span>] = <span style="color:#d2a8ff;font-weight:bold">max</span>(lastInterval[<span style="color:#a5d6ff">1</span>], currRight)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ans
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">max</span>(a, b <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> a &gt; b {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> a
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> b
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O\left(n\log n\right)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="reverse-a-list-in-place">Reverse a list in-place</h2>
-
 <p>You cannot use any additional list in other wards Space Complexity should be $O(1)$.</p>
-
 <p>Use two variable, start and end. Start set to <code>0</code> and end set to <code>n-1</code>. Increment start and decrement end. Swap the values stored at <code>nums[start]</code> and <code>nums[end]</code>. Stop when start is equal to end or start is greater than end.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Reverse a list in-place
-</span><span style="color:#75715e">// You cannot use any additional list in other wards Space Complexity should be O(1)
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Reverse</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">nums</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">start</span> &lt; <span style="color:#a6e22e">end</span> {
-		<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">start</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">start</span>]
-		<span style="color:#a6e22e">start</span><span style="color:#f92672">++</span>
-		<span style="color:#a6e22e">end</span><span style="color:#f92672">--</span>
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Reverse a list in-place
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// You cannot use any additional list in other wards Space Complexity should be O(1)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Reverse</span>(nums []<span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	start, end <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, len(nums)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> start &lt; end {
+</span></span><span style="display:flex;"><span>		nums[start], nums[end] = nums[end], nums[start]
+</span></span><span style="display:flex;"><span>		start<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		end<span style="color:#ff7b72;font-weight:bold">--</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> nums
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O\left(\frac{n}{2}\right)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="given-a-list-of-0s-and-1s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s">Given a list of 0s and 1s. We need to sort it so that all the 0s are before all the 1s</h2>
-
-<p>Use two variable, start and end. Start set to <code>0</code> and end set to <code>n-1</code>. Increment start and decrement end. Swap the values stored at <code>nums[start]</code> and <code>[end]</code> only when <code>nums[start] ==</code>1 and <code>nums[end] ==0</code>. Stop when start is equal to end or start is greater than end.</p>
-
+<p>Use two variable, start and end. Start set to <code>0</code> and end set to <code>n-1</code>. Increment start and decrement end. Swap the values stored at <code>nums[start]</code> and <code>[end]</code> only when <code>nums[start] == </code>1 and <code>nums[end] ==0</code>. Stop when start is equal to end or start is greater than end.</p>
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Segregate0and1 given a list of 0s and 1s. We need to sort it so that all the 0s are before all the 1s
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Segregate0and1</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">nums</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">start</span> &lt; <span style="color:#a6e22e">end</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">start</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> {
-			<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">start</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">start</span>]
-			<span style="color:#a6e22e">end</span><span style="color:#f92672">--</span>
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">start</span><span style="color:#f92672">++</span>
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Segregate0and1 given a list of 0s and 1s. We need to sort it so that all the 0s are before all the 1s
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Segregate0and1</span>(nums []<span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	start, end <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, len(nums)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> start &lt; end {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[start] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span> {
+</span></span><span style="display:flex;"><span>			nums[start], nums[end] = nums[end], nums[start]
+</span></span><span style="display:flex;"><span>			end<span style="color:#ff7b72;font-weight:bold">--</span>
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			start<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> nums
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O\left(\frac{n}{2}\right)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="given-an-array-of-0s-1s-and-2s-we-need-to-sort-it-so-that-all-the-0s-are-before-all-the-1s-and-all-the-1s-are-before-2s">Given an array of 0s, 1s and 2s. We need to sort it so that all the 0s are before all the 1s and all the 1s are before 2s</h2>
-
 <p>Same as above first think 0s and 1s as one group and move all the 2s on the right side. Then do a second pass over the array to sort 0s and 1s.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Segregate0and1and2 Given an array of 0s, 1s and 2s
-</span><span style="color:#75715e">// We need to sort it so that all the 0s are before all the 1s and all the 1s are before 2s
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Segregate0and1and2</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">low</span>, <span style="color:#a6e22e">mid</span>, <span style="color:#a6e22e">high</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">nums</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">mid</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">high</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
-			<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>]
-			<span style="color:#a6e22e">low</span><span style="color:#f92672">++</span>
-			<span style="color:#a6e22e">mid</span><span style="color:#f92672">++</span>
-		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> {
-			<span style="color:#a6e22e">mid</span><span style="color:#f92672">++</span>
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">high</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">high</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>]
-			<span style="color:#a6e22e">high</span><span style="color:#f92672">--</span>
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Segregate0and1and2 Given an array of 0s, 1s and 2s
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// We need to sort it so that all the 0s are before all the 1s and all the 1s are before 2s
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">Segregate0and1and2</span>(nums []<span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	low, mid, high <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>, len(nums)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> mid <span style="color:#ff7b72;font-weight:bold">&lt;=</span> high {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[mid] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span> {
+</span></span><span style="display:flex;"><span>			nums[low], nums[mid] = nums[mid], nums[low]
+</span></span><span style="display:flex;"><span>			low<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>			mid<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span> nums[mid] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span> {
+</span></span><span style="display:flex;"><span>			mid<span style="color:#ff7b72;font-weight:bold">++</span>
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			nums[mid], nums[high] = nums[high], nums[mid]
+</span></span><span style="display:flex;"><span>			high<span style="color:#ff7b72;font-weight:bold">--</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> nums
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O\left(\frac{n}{2}\right)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-duplicate-elements-in-a-list-of-size-n-where-each-element-is-in-the-range-0-to-n-1">Find the duplicate elements in a list of size n where each element is in the range 0 to n-1</h2>
-
 <p>We will exploit the constraint &ldquo;every element is in the range <code>0</code> to <code>n-1</code>&rdquo;. We can take a list <code>nums[]</code> of size n and set all the elements to 0. Whenever we get a value say <code>val1</code>. We will increment the value at <code>nums[var1]</code> index by 1. In the end, we can traverse the list arr and print the repeated values. Additional Space Complexity will be $O(n)$ which will be less than Hash-Table approach.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// FindDuplicates find the duplicate elements in a list of size n where each element is in the range 0 to n-1
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">FindDuplicates</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> []<span style="color:#66d9ef">int</span>
-	<span style="color:#a6e22e">length</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">%</span> <span style="color:#a6e22e">length</span>
-		<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">x</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">length</span>
-	}
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">length</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span> {
-			<span style="color:#a6e22e">result</span> = append(<span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">i</span>)
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// FindDuplicates find the duplicate elements in a list of size n where each element is in the range 0 to n-1
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">FindDuplicates</span>(nums []<span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> result []<span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	length <span style="color:#ff7b72;font-weight:bold">:=</span> len(nums)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; length; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		x <span style="color:#ff7b72;font-weight:bold">:=</span> nums[i] <span style="color:#ff7b72;font-weight:bold">%</span> length
+</span></span><span style="display:flex;"><span>		nums[x] = nums[x] <span style="color:#ff7b72;font-weight:bold">+</span> length
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>; i &lt; length; i<span style="color:#ff7b72;font-weight:bold">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[i] <span style="color:#ff7b72;font-weight:bold">&gt;=</span> length<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">2</span> {
+</span></span><span style="display:flex;"><span>			result = append(result, i)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> result
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O(n)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
 <h2 id="find-the-maximum-element-in-a-sorted-and-rotated-list">Find the maximum element in a sorted and rotated list</h2>
-
 <p>Binary search algorithm is ok.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// FindMax Find the maximum element in a sorted and rotated list
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">FindMax</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">low</span>, <span style="color:#a6e22e">mid</span>, <span style="color:#a6e22e">high</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">nums</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">high</span>] {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>]
-	}
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">low</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> &lt; <span style="color:#a6e22e">high</span> {
-		<span style="color:#a6e22e">mid</span> = <span style="color:#a6e22e">low</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">high</span><span style="color:#f92672">-</span><span style="color:#a6e22e">low</span>)<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">1</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>] &lt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>] {
-			<span style="color:#a6e22e">low</span> = <span style="color:#a6e22e">mid</span>
-		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>] &gt; <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">mid</span>] {
-			<span style="color:#a6e22e">high</span> = <span style="color:#a6e22e">mid</span>
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">low</span> = <span style="color:#a6e22e">mid</span>
-		}
-	}
-
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">high</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>] {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">high</span>]
-	} <span style="color:#66d9ef">else</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">low</span>]
-	}
-}</code></pre></div>
-<p><strong>Complexity Analysis:</strong></p>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// FindMax Find the maximum element in a sorted and rotated list
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">FindMax</span>(nums []<span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	low, mid, high <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>, len(nums)<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> nums[low] <span style="color:#ff7b72;font-weight:bold">==</span> nums[high] {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> nums[low]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> low<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span> &lt; high {
+</span></span><span style="display:flex;"><span>		mid = low <span style="color:#ff7b72;font-weight:bold">+</span> (high<span style="color:#ff7b72;font-weight:bold">-</span>low)<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> nums[low] &lt; nums[mid] {
+</span></span><span style="display:flex;"><span>			low = mid
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span> nums[low] &gt; nums[mid] {
+</span></span><span style="display:flex;"><span>			high = mid
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			low = mid
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> nums[high] <span style="color:#ff7b72;font-weight:bold">&gt;=</span> nums[low] {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> nums[high]
+</span></span><span style="display:flex;"><span>	} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> nums[low]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Complexity Analysis:</strong></p>
 <ul>
 <li>Time complexity: $O\left(n\log n\right)$</li>
 <li>Auxiliary Space: $O(1)$</li>
 </ul>
-
-<h2 id="given-a-slice-with-n-elements-a-value-x-find-two-elements-in-the-list-that-sums-to-x">Given a slice with &lsquo;n&rsquo; elements &amp; a value &lsquo;x&rsquo;, find two elements in the list that sums to &lsquo;x&rsquo;</h2>
-
+<h2 id="given-a-slice-with-n-elements--a-value-x-find-two-elements-in-the-list-that-sums-to-x">Given a slice with &rsquo;n&rsquo; elements &amp; a value &lsquo;x&rsquo;, find two elements in the list that sums to &lsquo;x&rsquo;</h2>
 <p>Similar to LeetCode&rsquo;s Two Sum.</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// CheckPairs Given a slice with &#39;n&#39; elements &amp; a value &#39;x&#39;
-</span><span style="color:#75715e">//  find two elements in the list that sums to &#39;x&#39;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CheckPairs</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
-	<span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>)
-
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">nums</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#a6e22e">v</span>]; <span style="color:#a6e22e">ok</span> {
-			<span style="color:#66d9ef">return</span> []<span style="color:#66d9ef">int</span>{<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">k</span>}
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">m</span>[<span style="color:#a6e22e">v</span>] = <span style="color:#a6e22e">k</span>
-		}
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
-}</code></pre></div>
-<h2 id="write-a-method-to-find-the-sum-of-every-number-in-an-int-number">Write a method to find the sum of every number in an int number</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// CheckPairs Given a slice with &#39;n&#39; elements &amp; a value &#39;x&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">//  find two elements in the list that sums to &#39;x&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">CheckPairs</span>(nums []<span style="color:#ff7b72">int</span>, x <span style="color:#ff7b72">int</span>) []<span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	m <span style="color:#ff7b72;font-weight:bold">:=</span> make(<span style="color:#ff7b72">map</span>[<span style="color:#ff7b72">int</span>]<span style="color:#ff7b72">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> k, v <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#ff7b72">range</span> nums {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> i, ok <span style="color:#ff7b72;font-weight:bold">:=</span> m[x<span style="color:#ff7b72;font-weight:bold">-</span>v]; ok {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> []<span style="color:#ff7b72">int</span>{i, k}
+</span></span><span style="display:flex;"><span>		} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>			m[v] = k
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#79c0ff">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="write-a-method-to-find-the-sum-of-every-number-in-an-int-number">Write a method to find the sum of every number in an int number</h2>
 <p>Example: input= 1984, output should be 22 (1+9+8+4)</p>
-
 <p><strong>Solution:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// SumOfDigits return the sum of every number in an int number
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SumOfDigits</span>(<span style="color:#a6e22e">num</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
-	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ans</span> <span style="color:#66d9ef">int</span>
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">num</span> &gt; <span style="color:#ae81ff">0</span> {
-		<span style="color:#a6e22e">ans</span> = <span style="color:#a6e22e">ans</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">num</span><span style="color:#f92672">%</span><span style="color:#ae81ff">10</span>
-		<span style="color:#a6e22e">num</span> = <span style="color:#a6e22e">num</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
-	}
-
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ans</span>
-}</code></pre></div>
-<h1 id="conclusion">Conclusion</h1>
-
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// SumOfDigits return the sum of every number in an int number
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">SumOfDigits</span>(num <span style="color:#ff7b72">int</span>) <span style="color:#ff7b72">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">var</span> ans <span style="color:#ff7b72">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">for</span> num &gt; <span style="color:#a5d6ff">0</span> {
+</span></span><span style="display:flex;"><span>		ans = ans <span style="color:#ff7b72;font-weight:bold">+</span> num<span style="color:#ff7b72;font-weight:bold">%</span><span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>		num = num <span style="color:#ff7b72;font-weight:bold">/</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ans
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="conclusion">Conclusion</h1>
 <p>Hard to top, can&rsquo;t top it.</p>
-
 <h1 id="reference">Reference</h1>
-
 <ul>
 <li><a href="https://www.issacc.com/find-minimum-in-rotated-sorted-array/">find-minimum-in-rotated-sorted-array</a></li>
 <li><a href="https://www.geeksforgeeks.org/find-duplicates-in-on-time-and-constant-extra-space/">Find duplicates in O(n) time and O(1) extra space</a></li>
@@ -979,7 +905,7 @@ if (!doNotTrack) {
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 Shenle Lu. All Rights Reserved
+    &copy; 2023 Shenle Lu. All Rights Reserved
   </span>
 </footer>
 
@@ -1095,7 +1021,7 @@ if (!doNotTrack) {
     
     <h4 id="about-card-name">Shenle Lu</h4>
     
-      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer, ASU Master&rsquo;s in Progress.</div>
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
     
     
       <div id="about-card-job">

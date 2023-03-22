@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/shenle.lu\/",
+  "author": {
+    "@type": "Person",
+    "name": "Shenle Lu",
+    
+    "image": "https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236"
+    
+  },
+  "name":"Shenle Lu\u0027s Blog",
+  "description":"The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.",
+  "url":"https:\/\/shenle.lu\/post\/2023\/03\/k8s-tokenrequest-api\/",
+  "keywords":"[tech, Kubernetes]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Shenle Lu">
+<meta name="keywords" content="tech, Kubernetes">
+<meta name="description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+
+
+<meta property="og:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S TokenRequest API">
+<meta name="twitter:title" content="K8S TokenRequest API">
+<meta property="og:url" content="https://shenle.lu/post/2023/03/k8s-tokenrequest-api/">
+<meta property="twitter:url" content="https://shenle.lu/post/2023/03/k8s-tokenrequest-api/">
+<meta property="og:site_name" content="Shenle Lu&#39;s Blog">
+<meta property="og:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta name="twitter:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2023-03-22T17:31:49">
+  
+  
+    <meta property="article:modified_time" content="2023-03-22T17:31:49">
+  
+  
+  
+    
+      <meta property="article:section" content="Kubernetes">
+    
+      <meta property="article:section" content="Container">
+    
+  
+  
+    
+      <meta property="article:tag" content="Kubernetes">
+    
+      <meta property="article:tag" content="Container">
+    
+      <meta property="article:tag" content="Golang">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+  <meta name="twitter:site" content="@lushenle">
+
+
+  <meta name="twitter:creator" content="@lushenle">
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=640">
+
+
+
+
+
+
+    <title>K8S TokenRequest API</title>
+
+    <link rel="icon" href="https://shenle.lu/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://shenle.lu/post/2023/03/k8s-tokenrequest-api/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.css" integrity="sha512-MLcK/YRapzET1qTBXrOiZE6bGBgtATMo2bIyalVJ8EKDEGNoeA3SPQkvWAR0zNS650YG13ocXBMeioDuZcSRuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://shenle.lu/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7PSKWF3B39"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-7PSKWF3B39', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://shenle.lu/" aria-label="Go to homepage">Shenle Lu&#39;s Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://shenle.lu/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://shenle.lu/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Shenle Lu</h4>
+        
+          <h5 class="sidebar-profile-bio">Cloud Native Enginner, Guitarist, Drummer.</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/lushenle" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/lushenle" target="_blank" rel="noopener" title="Twitter">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-twitter" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/lushenle/" target="_blank" rel="noopener" title="Instagram">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-instagram" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/shenle-lu-b52255222/" target="_blank" rel="noopener" title="LinkedIn">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-linkedin" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/17026153/shenle-lu" target="_blank" rel="noopener" title="Stack Overflow">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-stack-overflow" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://shenle.lu/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      K8S TokenRequest API
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-03-22T17:31:49&#43;08:00">
+        
+  March 22, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://shenle.lu/categories/kubernetes">Kubernetes</a>, 
+    
+      <a class="category-link" href="https://shenle.lu/categories/container">Container</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p>A common way for users to <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">authenticate Kubernetes clusters</a> is through an API that issues JSON Web Tokens (JWT). These tokens can be used to identify a Kubernetes user or service account and grant them access to the environment. While this is not a new feature, Kubernetes 1.24 adds a command that allows users to create these tokens more easily using the TokenRequest API.</p>
+<ul>
+<li>
+<p>We can use JWT to authenticate Kubernetes users and service accounts.</p>
+</li>
+<li>
+<p>The new Kubernetes version makes it easier to create JWT tokens.</p>
+</li>
+<li>
+<p>Creating JWT tokens using the TokenRequest API is easier than ever.</p>
+</li>
+</ul>
+<p>In the K8s version before 1.24, every time we would create a service account, a non-expiring secret token (Mountable secrets &amp; Tokens) was created by default. However, from version 1.24 onwards, it was disbanded and no secret token is created by default when we create a service account. However, we can create it when need be. Now let us take a look at the service account token in a bit more depth.</p>
+<h2 id="service-account-token">Service Account Token</h2>
+<p>Kubernetes supports two types of tokens from version 1.22 onwards.</p>
+<ul>
+<li>Long-Lived Token</li>
+<li>Time Bound Token</li>
+</ul>
+<h3 id="long-lived-token">Long-Lived Token</h3>
+<p>As its name indicates, a long-lived token is one that never expires. Hence, it is less secure and discouraged to use.</p>
+<p><strong>Creating Long-Lived Token</strong></p>
+<p>Before K8s version 1.24, whenever a service account was created, a secret object was also created that contains the secret token. These token would be long-lived token, which means it has no expiry. However, In Kubernetes version 1.24, it was disbanded due to security and scalability concerns.</p>
+<p>Although not recommended, K8s allows us to create a long-lived token. It is achieved in two different steps:</p>
+<ul>
+<li>Create a service account</li>
+<li>Create a secret and specify the name of the service account as annotations within the metadata section.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubect create serviceaccount my-sa
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl apply -f - <span style="color:#a5d6ff">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">apiVersion: v1
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">kind: Secret
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  name: my-long-lived-secret
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  annotations:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    kubernetes.io/service-account.name: my-sa
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">type: kubernetes.io/service-account-token
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">EOF</span>
+</span></span></code></pre></div><h3 id="time-bound-token">Time Bound Token</h3>
+<p>From version 1.22 onwards, Kubernetes introduced <code>TokenRequest</code> API. A token generated through this API is a time-bound token that expires after a time. It applies to both — the default service account and the custom-defined service accounts.</p>
+<p><strong>Creating a time-bound token</strong></p>
+<p>We can create a time-bound token using the below command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;{&#34;apiVersion&#34;: &#34;authentication.k8s.io/v1&#34;, &#34;kind&#34;: &#34;TokenRequest&#34;, &#34;spec&#34;: {&#34;audiences&#34;: [&#34;https://kubernetes.default.svc.cluster.local&#34;], &#34;expirationSeconds&#34;: 3600}&#39;</span> <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>  | kubectl create -f- --raw /api/v1/namespaces/default/serviceaccounts/my-sa/token
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  &#34;apiVersion&#34;: &#34;authentication.k8s.io/v1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  &#34;kind&#34;: &#34;TokenRequest&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  &#34;spec&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;audiences&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">      &#34;https://kubernetes.default.svc.cluster.local&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    ],
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;expirationSeconds&#34;: 3600
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">}&#39;</span> <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span> | kubectl create -f- --raw /api/v1/namespaces/default/serviceaccounts/my-sa/token
+</span></span></code></pre></div><p>In the following sections, we will see a completed example using various methods, from creating a ServiceAccount to creating a Token, using Token, TokenReview</p>
+<h2 id="create-serviceaccount">Create ServiceAccount</h2>
+<p>To create a ServiceAccount in Kubernetes, follow these steps:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>ServiceAccount</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">yaml</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br><span>25</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">func updateOrCreateServiceAccount(clientset *kubernetes.Clientset, ctx context.Context, namespace, serviceAccountName string) (*corev1.ServiceAccount, error) {
+	get, err := clientset.CoreV1().ServiceAccounts(namespace).Get(ctx, serviceAccountName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	labels := map[string]string{&#34;app&#34;: &#34;myapp&#34;}
+
+	if get != nil {
+		get.ObjectMeta.Labels = labels
+		return clientset.CoreV1().ServiceAccounts(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	sa := &amp;corev1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      serviceAccountName,
+			Labels:    labels,
+		},
+	}
+
+	return clientset.CoreV1().ServiceAccounts(namespace).Create(ctx, sa, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-yaml yaml" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-yaml yaml"><code class="yaml">apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-sa
+  namespace: default
+  labels:
+    app: myapp</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash">kubectl create serviceaccount my-sa</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<h2 id="create-role">Create Role</h2>
+<p>To create a Role in Kubernetes, follow these steps:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>Role</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">yaml</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br><span>25</span><br><span>26</span><br><span>27</span><br><span>28</span><br><span>29</span><br><span>30</span><br><span>31</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">func updateOrCreateRole(clientset *kubernetes.Clientset, ctx context.Context, namespace, roleName string) (*rbacv1.Role, error) {
+	get, err := clientset.RbacV1().Roles(namespace).Get(ctx, roleName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	rules := []rbacv1.PolicyRule{
+		{
+			APIGroups: []string{&#34;&#34;},
+			Resources: []string{&#34;pods&#34;},
+			Verbs:     []string{&#34;list&#34;, &#34;get&#34;, &#34;watch&#34;},
+		},
+	}
+
+	if get != nil {
+		get.Rules = rules
+		return clientset.RbacV1().Roles(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	role := &amp;rbacv1.Role{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      roleName,
+		},
+		Rules: rules,
+	}
+
+	return clientset.RbacV1().Roles(namespace).Create(ctx, role, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-yaml yaml" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-yaml yaml"><code class="yaml">apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: my-role
+  namespace: default
+rules:
+  - apiGroups: [&#34;&#34;]
+    resources: [&#34;pods&#34;]
+    verbs: [&#34;list&#34;, &#34;get&#34;, &#34;watch&#34;]</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash">kubectl create role my-role --resource=pods --verb=list,watch,get</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<p>This will create the Role in the <code>default</code> namespace.</p>
+<p>That&rsquo;s it! You have now created a Role in Kubernetes.</p>
+<h2 id="create-rolebinding">Create RoleBinding</h2>
+<p>In Kubernetes, RoleBinding is used to bind a role to a user, group, or service account in a given namespace. The RoleBinding grants the permissions defined in the role to the subject.</p>
+<p>To create a RoleBinding, follow these steps:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>RoleBinding</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">yaml</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br><span>25</span><br><span>26</span><br><span>27</span><br><span>28</span><br><span>29</span><br><span>30</span><br><span>31</span><br><span>32</span><br><span>33</span><br><span>34</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">func updateOrCreateRoleBinding(clientset *kubernetes.Clientset, ctx context.Context, namespace, roleName, roleBindingName, serviceAccountName string) (*rbacv1.RoleBinding, error) {
+	get, err := clientset.RbacV1().RoleBindings(namespace).Get(ctx, roleBindingName, metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return nil, err
+		}
+	}
+
+	roleBinding := &amp;rbacv1.RoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+			Name:      roleBindingName,
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      rbacv1.ServiceAccountKind,
+				Name:      serviceAccountName,
+				Namespace: namespace,
+			},
+		},
+		RoleRef: rbacv1.RoleRef{
+			APIGroup: rbacv1.GroupName,
+			Kind:     &#34;Role&#34;,
+			Name:     roleName,
+		},
+	}
+
+	if get != nil {
+		get = roleBinding
+		return clientset.RbacV1().RoleBindings(namespace).Update(ctx, get, metav1.UpdateOptions{})
+	}
+
+	return clientset.RbacV1().RoleBindings(namespace).Create(ctx, roleBinding, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-yaml yaml" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-yaml yaml"><code class="yaml">apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: my-rb
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: my-role
+subjects:
+  - kind: ServiceAccount
+    name: my-sa
+    namespace: default</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash">kubectl create rolebinding my-rb --role=my-role --serviceaccount=default:my-sa</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<p>This will create the RoleBinding in the <code>default</code> namespace.</p>
+<p>That&rsquo;s it! You have now created a RoleBinding in Kubernetes.</p>
+<h2 id="get-a-user-bearer-token">Get a user bearer token</h2>
+<p>To successfully make HTTP requests to the Kubernetes API a bearer token must be included as an authorization header. Below is an example command one could run to get the bearer token for a user named admin-user in the namespace of kube-system. This same command could apply to any other user or namespace.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl -n kube-system describe secret <span style="color:#ff7b72">$(</span>kubectl -n kube-system get secret | grep admin-user | awk <span style="color:#a5d6ff">&#39;{print $1}&#39;</span><span style="color:#ff7b72">)</span>
+</span></span></code></pre></div><h2 id="tokenrequest">TokenRequest</h2>
+<p>The TokenRequest API allows you to request a token for a ServiceAccount in Kubernetes. To use TokenRequest, follow these steps:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>TokenRequest</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">yaml</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">func createToken(clientset *kubernetes.Clientset, ctx context.Context, namespace, serviceAccountName string) (*authenticationv1.TokenRequest, error) {
+	// Create a TokenRequest
+	tokenRequest := &amp;authenticationv1.TokenRequest{
+		Spec: authenticationv1.TokenRequestSpec{
+			Audiences: []string{&#34;https://kubernetes.default.svc.cluster.local&#34;}, // service-account-issuer
+			ExpirationSeconds: func() *int64 {
+				var seconds int64 = 3600 // Token expiration time in seconds (1 hour)
+				return &amp;seconds
+			}(),
+		},
+	}
+
+	// Request the token
+	return clientset.CoreV1().ServiceAccounts(namespace).CreateToken(ctx,
+		serviceAccountName, tokenRequest, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-yaml yaml" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-yaml yaml"><code class="yaml">apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: my-sec
+  annotations:
+    kubernetes.io/service-account.name: &#34;my-sa&#34;</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash"># Use curl
+
+curl -k -X &#34;POST&#34; &#34;https://{kubernetes API IP}:{kubernetes API Port}/api/v1/namespaces/default/serviceaccounts/my-sa/token&#34; \
+  -H &#39;Authorization: Bearer ....&#39; \
+  -H &#39;Content-Type: application/json; charset=utf-8&#39; \
+  -d $&#39;{}&#39;
+
+# Use kubectl 1
+
+kubectl create token my-sa --duration 1h --audience=&#34;[&#39;https://kubernetes.default.svc.cluster.local&#39;]&#34;
+
+# Use kubectl 2
+
+echo &#39;{
+  &#34;apiVersion&#34;: &#34;authentication.k8s.io/v1&#34;,
+  &#34;kind&#34;: &#34;TokenRequest&#34;,
+  &#34;spec&#34;: {
+    &#34;audiences&#34;: [
+      &#34;https://kubernetes.default.svc.cluster.local&#34;
+    ],
+    &#34;expirationSeconds&#34;: 3600
+  }
+}&#39; \
+ | kubectl create -f- --raw /api/v1/namespaces/default/serviceaccounts/my-sa/token</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<p>This will create the TokenRequest and return the token for the specified ServiceAccount.</p>
+<p>That&rsquo;s it! You have now used TokenRequest to request a token for a ServiceAccount in Kubernetes.</p>
+<h2 id="get-pods">Get Pods</h2>
+<p>Use the generated token to communicate with APIServer to obtain the Pods of default namespace:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>GetPods</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br><span>14</span><br><span>15</span><br><span>16</span><br><span>17</span><br><span>18</span><br><span>19</span><br><span>20</span><br><span>21</span><br><span>22</span><br><span>23</span><br><span>24</span><br><span>25</span><br><span>26</span><br><span>27</span><br><span>28</span><br><span>29</span><br><span>30</span><br><span>31</span><br><span>32</span><br><span>33</span><br><span>34</span><br><span>35</span><br><span>36</span><br><span>37</span><br><span>38</span><br><span>39</span><br><span>40</span><br><span>41</span><br><span>42</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">package main
+
+import (
+	&#34;crypto/tls&#34;
+	&#34;fmt&#34;
+	&#34;io&#34;
+	&#34;log&#34;
+	&#34;net/http&#34;
+)
+
+func main() {
+	kubeApiUrl := &#34;https://{kubernetes API IP}:{kubernetes API Port}&#34;
+	namespace := &#34;default&#34;
+	bearerToken := &#34;...&#34;
+
+	client := &amp;http.Client{
+		Transport: &amp;http.Transport{
+			TLSClientConfig: &amp;tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	req, err := http.NewRequest(&#34;GET&#34;, fmt.Sprintf(&#34;%s/api/v1/namespaces/%s/pods/reviews-v3-d88774f9c-gt5gg&#34;, kubeApiUrl, namespace), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set(&#34;Authorization&#34;, fmt.Sprintf(&#34;Bearer %s&#34;, bearerToken))
+	req.Header.Set(&#34;Accept&#34;, &#34;application/json&#34;)
+
+	response, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(body))
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash">curl -k -X &#34;GET&#34; &#34;https://{kubernetes API IP}:{kubernetes API Port}/api/v1/namespaces/default/pods&#34; \
+  -H &#39;Authorization: Bearer ...&#39; \
+  -H &#39;Content-Type: application/json; charset=utf-8&#39;</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<h2 id="tokenreview">TokenReview</h2>
+<p>The TokenReview API allows you to validate a token for a ServiceAccount in Kubernetes. To use TokenReview, follow these steps:</p>
+
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+    
+  
+  
+
+<figure class="codeblock codeblock--tabbed">
+  <figcaption>
+    
+      <span>TokenReview</span>
+    
+    <ul class="tabs">
+      
+        <li class="tab active">go</li>
+      
+        <li class="tab ">bash</li>
+      
+    </ul>
+  </figcaption>
+  <div class="tabs-content">
+    
+      
+      <figure class="highlight language-go go" style="display: block;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br><span>11</span><br><span>12</span><br><span>13</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-go go"><code class="go">func createTokenReview(clientset *kubernetes.Clientset, ctx context.Context, namespace, token string) (*authenticationv1.TokenReview, error) {
+	tokenReview := &amp;authenticationv1.TokenReview{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: namespace,
+		},
+		Spec: authenticationv1.TokenReviewSpec{
+			Token:     token,
+			Audiences: []string{&#34;https://kubernetes.default.svc.cluster.local&#34;},
+		},
+	}
+
+	return clientset.AuthenticationV1().TokenReviews().Create(ctx, tokenReview, metav1.CreateOptions{})
+}</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+      
+      <figure class="highlight language-bash bash" style="display: none;">
+        <table>
+          <tbody>
+            <tr>
+              <td class="gutter">
+                <pre><span>1</span><br><span>2</span><br><span>3</span><br><span>4</span><br><span>5</span><br><span>6</span><br><span>7</span><br><span>8</span><br><span>9</span><br><span>10</span><br></pre>
+              </td>
+              <td class="code">
+                <pre class="code-highlight language-bash bash"><code class="bash">curl -k -X &#34;POST&#34; &#34;https://{kubernetes API IP}:{kubernetes API Port}/apis/authentication.k8s.io/v1/tokenreviews&#34; \
+     -H &#39;Authorization: Bearer {your bearer token}&#39; \
+     -H &#39;Content-Type: application/json; charset=utf-8&#39; \
+     -d $&#39;{
+  &#34;kind&#34;: &#34;TokenReview&#34;,
+  &#34;apiVersion&#34;: &#34;authentication.k8s.io/v1&#34;,
+  &#34;spec&#34;: {
+    &#34;token&#34;: &#34;{token received in token request response}&#34;
+  }
+}&#39;</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    
+  </div>
+</figure>
+
+<p>This will display the status of the TokenReview request, including whether the token is valid or not.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/">https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/</a></li>
+<li><a href="https://www.programmingwithwolfgang.com/use-the-tokenrequest-api-to-create-tokens-in-kubernetes/">https://www.programmingwithwolfgang.com/use-the-tokenrequest-api-to-create-tokens-in-kubernetes/</a></li>
+<li><a href="https://securitylabs.datadoghq.com/articles/kubernetes-tokenrequest-api/">https://securitylabs.datadoghq.com/articles/kubernetes-tokenrequest-api/</a></li>
+<li><a href="https://medium.com/@th3b3ginn3r/understanding-service-accounts-in-kubernetes-e9d2abe19df8">https://medium.com/@th3b3ginn3r/understanding-service-accounts-in-kubernetes-e9d2abe19df8</a></li>
+<li><a href="https://jpweber.io/blog/a-look-at-tokenrequest-api/">https://jpweber.io/blog/a-look-at-tokenrequest-api/</a></li>
+</ul>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://shenle.lu/tags/kubernetes/">Kubernetes</a>
+
+  <a class="tag tag--primary tag--small" href="https://shenle.lu/tags/container/">Container</a>
+
+  <a class="tag tag--primary tag--small" href="https://shenle.lu/tags/golang/">Golang</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2022/04/sorts-in-golang-generic/" data-tooltip="Sorts in Golang Generic" aria-label="PREVIOUS: Sorts in Golang Generic">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#gitalk" aria-label="Leave a comment">
+        <i class="fa fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="gitalk">
+      <noscript>Please enable JavaScript to view the comments powered by Gitalk.</noscript>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js" integrity="sha512-EcTCcXV46teiNwe0VcnM5A038tcY+BaQYO4nW6Gh2i7v4/HjBVg7xx3+JBLl9WofDds//INJAiEGAtdgr8PWyA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+      (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('gitalk').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+          return;
+        }
+        new Gitalk({
+          clientID: 'ac713dbb5a422f9107dd',
+          clientSecret: 'f4225291e2d478e9f9fdb2af6d5245f95eefdb5f',
+          repo: 'lushenle.github.io',
+          owner: 'lushenle',
+          admin: ['lushenle'],
+          id: 'b01e8bc4844dbab22c8761e82367eafe',
+          ...{"distractionfreemode":false,"enablehotkey":true,"language":"en","pagerdirection":"first","perpage":10}
+        }).render('gitalk')
+      })()
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 Shenle Lu. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2022/04/sorts-in-golang-generic/" data-tooltip="Sorts in Golang Generic" aria-label="PREVIOUS: Sorts in Golang Generic">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Facebook" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://shenle.lu/post/2023/03/k8s-tokenrequest-api/" title="Share on Linkedin" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#gitalk" aria-label="Leave a comment">
+        <i class="fa fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fshenle.lu%2Fpost%2F2023%2F03%2Fk8s-tokenrequest-api%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fshenle.lu%2Fpost%2F2023%2F03%2Fk8s-tokenrequest-api%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fshenle.lu%2Fpost%2F2023%2F03%2Fk8s-tokenrequest-api%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/e7e1230b8763fb755cd0b39124913236?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Shenle Lu</h4>
+    
+      <div id="about-card-bio">Cloud Native Enginner, Guitarist, Drummer.</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Senior DevOps Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Beijing, China
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://shenle.lu/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://shenle.lu/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+
