@@ -16,7 +16,7 @@
     
   },
   "name":"Shenle Lu\u0027s Blog",
-  "description":"The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.",
+  "description":"",
   "url":"https:\/\/shenle.lu\/post\/2023\/03\/k8s-tokenrequest-api\/",
   "keywords":"[tech, Kubernetes]"
 }
@@ -28,18 +28,18 @@
 <meta name="generator" content="Hugo 0.111.3 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="Shenle Lu">
 <meta name="keywords" content="tech, Kubernetes">
-<meta name="description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta name="description" content="">
 
 
-<meta property="og:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta property="og:description" content="">
 <meta property="og:type" content="article">
 <meta property="og:title" content="K8S TokenRequest API">
 <meta name="twitter:title" content="K8S TokenRequest API">
 <meta property="og:url" content="https://shenle.lu/post/2023/03/k8s-tokenrequest-api/">
 <meta property="twitter:url" content="https://shenle.lu/post/2023/03/k8s-tokenrequest-api/">
 <meta property="og:site_name" content="Shenle Lu&#39;s Blog">
-<meta property="og:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
-<meta name="twitter:description" content="The TokenRequest API enables the creation of tokens that aren’t persisted in the Secrets API, that are targeted for specific audiences (such as external secret stores), have configurable expiries, and are bindable to specific pods. These tokens are bound to specific containers. Because of this, they can be used as a means of container identity. The current service account tokens are shared among all replicas of a deployment and thusly, are not a good means of unique identity.">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
@@ -326,7 +326,28 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p>A common way for users to <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">authenticate Kubernetes clusters</a> is through an API that issues JSON Web Tokens (JWT). These tokens can be used to identify a Kubernetes user or service account and grant them access to the environment. While this is not a new feature, Kubernetes 1.24 adds a command that allows users to create these tokens more easily using the TokenRequest API.</p>
+              <h1 id="table-of-contents">Table of Contents</h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#service-account-token">Service Account Token</a>
+      <ul>
+        <li><a href="#long-lived-token">Long-Lived Token</a></li>
+        <li><a href="#time-bound-token">Time Bound Token</a></li>
+      </ul>
+    </li>
+    <li><a href="#create-serviceaccount">Create ServiceAccount</a></li>
+    <li><a href="#create-role">Create Role</a></li>
+    <li><a href="#create-rolebinding">Create RoleBinding</a></li>
+    <li><a href="#get-a-user-bearer-token">Get a user bearer token</a></li>
+    <li><a href="#tokenrequest">TokenRequest</a></li>
+    <li><a href="#get-pods">Get Pods</a></li>
+    <li><a href="#tokenreview">TokenReview</a></li>
+    <li><a href="#complete-code">Complete code</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+
+<p>A common way for users to <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">authenticate Kubernetes clusters</a> is through an API that issues JSON Web Tokens (JWT). These tokens can be used to identify a Kubernetes user or service account and grant them access to the environment. While this is not a new feature, Kubernetes 1.24 adds a command that allows users to create these tokens more easily using the TokenRequest API.</p>
 <ul>
 <li>
 <p>We can use JWT to authenticate Kubernetes users and service accounts.</p>
@@ -1387,7 +1408,6 @@ func updateOrCreateServiceAccount(clientset *kubernetes.Clientset, ctx context.C
 <li><a href="https://medium.com/@th3b3ginn3r/understanding-service-accounts-in-kubernetes-e9d2abe19df8">https://medium.com/@th3b3ginn3r/understanding-service-accounts-in-kubernetes-e9d2abe19df8</a></li>
 <li><a href="https://jpweber.io/blog/a-look-at-tokenrequest-api/">https://jpweber.io/blog/a-look-at-tokenrequest-api/</a></li>
 </ul>
-
               
 
 
@@ -1418,7 +1438,7 @@ func updateOrCreateServiceAccount(clientset *kubernetes.Clientset, ctx context.C
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--disabled">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2023/03/deploy-a-service-on-k8s-using-csr/" data-tooltip="Deploy a Service on K8S Using CSR Provide TLS" aria-label="NEXT: Deploy a Service on K8S Using CSR Provide TLS">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -1523,7 +1543,7 @@ func updateOrCreateServiceAccount(clientset *kubernetes.Clientset, ctx context.C
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--disabled">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://shenle.lu/post/2023/03/deploy-a-service-on-k8s-using-csr/" data-tooltip="Deploy a Service on K8S Using CSR Provide TLS" aria-label="NEXT: Deploy a Service on K8S Using CSR Provide TLS">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>

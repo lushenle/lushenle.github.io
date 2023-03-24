@@ -3,33 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://shenle.lu/categories/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/tags/container/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/categories/container/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
+  </url><url>
+    <loc>https://shenle.lu/post/2023/03/deploy-a-service-on-k8s-using-csr/</loc>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/tags/golang/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
-  </url><url>
-    <loc>https://shenle.lu/post/2023/03/k8s-tokenrequest-api/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/tags/kubernetes/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/categories/kubernetes/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/post/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/</loc>
-    <lastmod>2023-03-22T17:31:49+08:00</lastmod>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/tags/</loc>
+    <lastmod>2023-03-23T19:49:51+08:00</lastmod>
+  </url><url>
+    <loc>https://shenle.lu/post/2023/03/k8s-tokenrequest-api/</loc>
     <lastmod>2023-03-22T17:31:49+08:00</lastmod>
   </url><url>
     <loc>https://shenle.lu/tags/algorithm/</loc>
